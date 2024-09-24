@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "1092550807467",
+    "project_id": "nu-carpool-56bf2",
+    "storage_bucket": "nu-carpool-56bf2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092550807467:android:a885e4d61d58107ed64cee",
+        "android_client_info": {
+          "package_name": "com.example.carpool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGdd1a7Ik6QSfwvBi9UZvEKhqLSvvefkk"
+        },
+        {
+          "current_key": "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1092550807467:android:1a64d9ee6c6cc504d64cee",
+        "android_client_info": {
+          "package_name": "com.example.nu_carpool"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGdd1a7Ik6QSfwvBi9UZvEKhqLSvvefkk"
+        },
+        {
+          "current_key": "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
