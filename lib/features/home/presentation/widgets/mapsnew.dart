@@ -65,7 +65,6 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('My Location Map')),
       body: _currentPosition != null
           ? GoogleMap(
               initialCameraPosition: _initialCameraPosition,

@@ -17,9 +17,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(),
       drawer: const NavDrawer(),
-      body: Stack(
+      body: Column(
         children: [
-          MapScreen(),
           Container(
             padding: const EdgeInsets.all(10.0),
             height: MediaQuary.height * 0.18,
@@ -50,6 +49,8 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+          //gdedddddddd
+          Expanded(child: MapScreen()),
         ],
       ),
     );
