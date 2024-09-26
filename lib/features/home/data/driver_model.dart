@@ -2,11 +2,11 @@ class DriverModel {
   final String license;
   final String car_color;
   final String car_model;
-  final String car_year;
+  final int car_year;
   final String car_type;
-  final String nationalID;
+  final int nationalID;
   final String car_letters;
-  final String car_numbers;
+  final int car_numbers;
 
 
   const DriverModel({

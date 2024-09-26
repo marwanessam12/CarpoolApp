@@ -7,17 +7,17 @@ import 'package:get/get.dart';
 class DriverRepository extends GetxController {
   static DriverRepository get instance => Get.find();
   final _db1 = FirebaseFirestore.instance;
-  createUser(DriverModel user) async {
+  createUser(DriverModel driver) async {
     await _db1
         .collection("Drivers")
         .doc(userId)
-        .set(user.toJson1())
+        .set(driver.toJson1())
         .whenComplete(
           () => Get.snackbar("Success", "your account has been created.",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green.withOpacity(0.1),
-          colorText: Colors.green),
-    )
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green.withOpacity(0.1),
+              colorText: Colors.green),
+        )
         .catchError((error, stackTrace) {
       Get.snackbar("Error", "Something went wrong. try again",
           snackPosition: SnackPosition.BOTTOM,
