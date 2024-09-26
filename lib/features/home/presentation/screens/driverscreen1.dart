@@ -63,14 +63,30 @@ class DriverScreen extends StatelessWidget {
                 const SizedBox(
                   height: 15.0,
                 ),
-                const TextField(
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'Model Year',
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    border: OutlineInputBorder(),
-                    hintText: 'Model year',
-                  ),
+                const Row(
+                  children: [
+                    TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Year',
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        border: OutlineInputBorder(),
+                        hintText: 'Model year',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 15.0,
+                    ),
+                    const TextField(
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: 'Colour',
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        border: OutlineInputBorder(),
+                        hintText: 'Car Colour',
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(
                   height: 15.0,
