@@ -68,7 +68,7 @@ class NavDrawer extends StatelessWidget {
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
                     ),
-                    child: const Text("driver mode"),
+                    child: const Text("Driver mode"),
                   ),
                 ),
               ],
