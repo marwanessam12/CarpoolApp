@@ -3,6 +3,7 @@ import 'package:carpool/features/home/presentation/widgets/Driver_controller.dar
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+//validated
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
 
