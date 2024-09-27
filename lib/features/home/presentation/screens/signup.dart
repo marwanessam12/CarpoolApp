@@ -119,13 +119,25 @@ class _SignUpState extends State<SignUp> {
                           width: 10.0,
                         ),
                         Expanded(
-                          child: TextField(
-                            controller: controller.gender,
+                          child: DropdownButtonFormField<String>(
+                            value: controller.gender.text.isEmpty
+                                ? null
+                                : controller.gender.text,
+                            items: ['Male', 'Female'].map((String gender) {
+                              return DropdownMenuItem<String>(
+                                value: gender,
+                                child: Text(gender),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              // Update the controller with the selected value
+                              controller.gender.text = newValue ?? '';
+                            },
                             decoration: const InputDecoration(
                               labelText: 'Gender',
                               floatingLabelBehavior: FloatingLabelBehavior.auto,
                               border: OutlineInputBorder(),
-                              hintText: 'Gender',
+                              hintText: 'Select Gender',
                             ),
                           ),
                         ),
