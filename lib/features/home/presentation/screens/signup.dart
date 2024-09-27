@@ -24,6 +24,8 @@ class _SignUpState extends State<SignUp> {
     userRepo.createUser((user));
   }
 
+  final _formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SignUpController());
@@ -35,252 +37,295 @@ class _SignUpState extends State<SignUp> {
             SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: <Widget>[
-                    const CommonAppbar(),
+                child: Form(
+                  key: _formKey, // Wrap entire form
+                  child: Column(
+                    children: <Widget>[
+                      const CommonAppbar(),
 
-                    const Text(
-                      "Register",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                        fontSize: 40.0,
-                      ),
-                    ),
-                    const Text("Create your account"),
-                    const SizedBox(
-                      height: 25.0,
-                    ), //register
-
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            controller: controller.firstname,
-                            onChanged: (value) => userName = value,
-                            decoration: const InputDecoration(
-                              labelText: 'First Name',
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              border: OutlineInputBorder(),
-                              hintText: 'First Name',
-                            ),
-                          ),
-                        ), //first name
-                        const SizedBox(
-                          width: 10.0,
+                      const Text(
+                        "Register",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                          fontSize: 40.0,
                         ),
-                        Expanded(
-                          child: TextField(
-                            controller: controller.lastname,
-                            decoration: const InputDecoration(
-                              labelText: 'Last Name',
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              border: OutlineInputBorder(),
-                              hintText: 'Last Name',
-                            ),
-                          ),
-                        ), //last name
-                      ],
-                    ), //name
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      controller: controller.id,
-                      onChanged: (value) => userId = value,
-                      decoration: const InputDecoration(
-                        labelText: 'ID',
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        border: OutlineInputBorder(),
-                        hintText: 'ID',
                       ),
-                    ), //ID
-                    const SizedBox(
-                      height: 15.0,
-                    ),
+                      const Text("Create your account"),
+                      const SizedBox(
+                        height: 25.0,
+                      ), //register
 
-                    Row(
-                      children: [
-                        Expanded(
-                          child: TextField(
-                            keyboardType: TextInputType.number,
-                            controller: controller.age,
-                            decoration: const InputDecoration(
-                              labelText: 'Age',
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              border: OutlineInputBorder(),
-                              hintText: 'Age',
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: controller.firstname,
+                              onChanged: (value) => userName = value,
+                              decoration: const InputDecoration(
+                                labelText: 'First Name',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                border: OutlineInputBorder(),
+                                hintText: 'First Name',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'First Name cannot be empty';
+                                }
+                                return null;
+                              },
                             ),
+                          ), //first name
+                          const SizedBox(
+                            width: 10.0,
                           ),
-                        ), //AGE
-                        const SizedBox(
-                          width: 10.0,
+                          Expanded(
+                            child: TextFormField(
+                              controller: controller.lastname,
+                              decoration: const InputDecoration(
+                                labelText: 'Last Name',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                border: OutlineInputBorder(),
+                                hintText: 'Last Name',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Last Name cannot be empty';
+                                }
+                                return null;
+                              },
+                            ),
+                          ), //last name
+                        ],
+                      ), //name
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+
+                      TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: controller.id,
+                        onChanged: (value) => userId = value,
+                        decoration: const InputDecoration(
+                          labelText: 'ID',
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          border: OutlineInputBorder(),
+                          hintText: 'ID',
                         ),
-                        Expanded(
-                          child: DropdownButtonFormField<String>(
-                            value: controller.gender.text.isEmpty
-                                ? null
-                                : controller.gender.text,
-                            items: ['Male', 'Female'].map((String gender) {
-                              return DropdownMenuItem<String>(
-                                value: gender,
-                                child: Text(gender),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              // Update the controller with the selected value
-                              controller.gender.text = newValue ?? '';
-                            },
-                            decoration: const InputDecoration(
-                              labelText: 'Gender',
-                              floatingLabelBehavior: FloatingLabelBehavior.auto,
-                              border: OutlineInputBorder(),
-                              hintText: 'Select Gender',
-                            ),
-                          ),
-                        ),
-                      ],
-                    ), //age& gender
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      controller: controller.mobileNumber,
-                      decoration: const InputDecoration(
-                        labelText: 'Mobile Number',
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        border: OutlineInputBorder(),
-                        hintText: 'Mobile Number',
-                      ),
-                    ), //Mobile number
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-
-                    TextField(
-                      controller: controller.email,
-                      onChanged: (value) => userEmail = value,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        border: OutlineInputBorder(),
-                        hintText: 'Enter your email@nu.edu.eg',
-                      ),
-                    ), //email
-                    const SizedBox(
-                      height: 15.0,
-                    ),
-
-                    PasswordForm(
-                      passwordFieldController: controller.password,
-                    ),
-
-                    // TextField(
-                    //   controller: controller.password,
-                    //   decoration: const InputDecoration(
-                    //     labelText: 'Password',
-                    //     floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    //     border: OutlineInputBorder(),
-                    //     hintText: 'Password',
-                    //   ),
-                    // ), //password
-                    // const SizedBox(
-                    //   height: 15.0,
-                    // ),
-                    //
-                    // const TextField(
-                    //   decoration: InputDecoration(
-                    //     labelText: 'Confirm Password',
-                    //     floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    //     border: OutlineInputBorder(),
-                    //     hintText: 'Confirm Password ',
-                    //   ),
-                    // ), //confirm password
-                    const SizedBox(
-                      height: 25.0,
-                    ),
-
-                    SizedBox(
-                      width: MediaQuery.sizeOf(context).width,
-                      child: TextButton(
-                        onPressed: () {
-                          FirebaseAuth.instance
-                              .createUserWithEmailAndPassword(
-                            email: controller.email.text,
-                            password: controller.password.text,
-                          )
-                              .then((value) async {
-                            // Once the user is created, store their info in Firestore
-                            final user = UserModel(
-                              firstname: controller.firstname.text.trim(),
-                              lastname: controller.lastname.text.trim(),
-                              age: int.parse(controller.age.text.trim()),
-                              gender: controller.gender.text.trim(),
-                              id: int.parse(controller.id.text.trim()),
-                              email: controller.email.text.trim(),
-                              mobileNumber: controller.mobileNumber.text.trim(),
-                              password: controller.password.text.trim(),
-                            );
-
-                            SignUpController.instance.createUser(user);
-                          });
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return OtpScreen(email: controller.email.text);
-                            },
-                          ));
+                        // Validation logic
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'ID cannot be empty';
+                          } else if (value.length > 10) {
+                            return 'ID cannot be more than 10 digits';
+                          }
+                          return null;
                         },
-                        style: TextButton.styleFrom(
-                          backgroundColor: Colors.blue,
-                          foregroundColor: Colors.white,
-                        ),
-                        child: const Text(
-                          "Register",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0,
-                          ),
-                        ),
+                      ), //ID
+                      const SizedBox(
+                        height: 15.0,
                       ),
-                    ), //register button
-                    const SizedBox(
-                      height: 25.0,
-                    ),
 
-                    Row(
-                      children: [
-                        const Text(
-                          "I already have account, ",
-                          style: TextStyle(
-                            fontSize: 15.0,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              controller: controller.age,
+                              decoration: const InputDecoration(
+                                labelText: 'Age',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                border: OutlineInputBorder(),
+                                hintText: 'Age',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Age cannot be empty';
+                                }
+                                return null;
+                              },
+                            ),
+                          ), //AGE
+                          const SizedBox(
+                            width: 10.0,
+                          ),
+                          Expanded(
+                            child: DropdownButtonFormField<String>(
+                              value: controller.gender.text.isEmpty
+                                  ? null
+                                  : controller.gender.text,
+                              items: ['Male', 'Female'].map((String gender) {
+                                return DropdownMenuItem<String>(
+                                  value: gender,
+                                  child: Text(gender),
+                                );
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                // Update the controller with the selected value
+                                controller.gender.text = newValue ?? '';
+                              },
+                              decoration: const InputDecoration(
+                                labelText: 'Gender',
+                                floatingLabelBehavior:
+                                    FloatingLabelBehavior.auto,
+                                border: OutlineInputBorder(),
+                                hintText: 'Select Gender',
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Gender cannot be empty';
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                        ],
+                      ), //age& gender
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+
+                      TextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: controller.mobileNumber,
+                        decoration: const InputDecoration(
+                          labelText: 'Mobile Number',
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          border: OutlineInputBorder(),
+                          hintText: 'Mobile Number',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Mobile Number cannot be empty';
+                          } else if (value.length != 11) {
+                            return 'Mobile Number must be exactly 11 digits';
+                          }
+                          return null;
+                        },
+                      ), //Mobile number
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+
+                      TextFormField(
+                        controller: controller.email,
+                        onChanged: (value) => userEmail = value,
+                        decoration: const InputDecoration(
+                          labelText: 'Email',
+                          floatingLabelBehavior: FloatingLabelBehavior.auto,
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter your email@nu.edu.eg',
+                        ),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Email is required';
+                          } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@nu\.edu\.eg$')
+                              .hasMatch(value)) {
+                            return 'Please enter a email @nu.edu.eg ';
+                          }
+                          return null;
+                        },
+                      ), //email
+                      const SizedBox(
+                        height: 15.0,
+                      ),
+
+                      PasswordForm(
+                        passwordFieldController: controller.password,
+                        formKey: _formKey,
+                      ),
+
+                      const SizedBox(
+                        height: 25.0,
+                      ),
+
+                      SizedBox(
+                        width: MediaQuery.sizeOf(context).width,
+                        child: TextButton(
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // Form is valid, proceed
+                              FirebaseAuth.instance
+                                  .createUserWithEmailAndPassword(
+                                email: controller.email.text,
+                                password: controller.password.text,
+                              )
+                                  .then((value) async {
+                                // Once the user is created, store their info in Firestore
+                                final user = UserModel(
+                                  firstname: controller.firstname.text.trim(),
+                                  lastname: controller.lastname.text.trim(),
+                                  age: int.parse(controller.age.text.trim()),
+                                  gender: controller.gender.text.trim(),
+                                  id: int.parse(controller.id.text.trim()),
+                                  email: controller.email.text.trim(),
+                                  mobileNumber:
+                                      controller.mobileNumber.text.trim(),
+                                  password: controller.password.text.trim(),
+                                );
+
+                                SignUpController.instance.createUser(user);
+                              });
+
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return OtpScreen(
+                                      email: controller.email.text);
+                                },
+                              ));
+                            }
+                          },
+                          style: TextButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                          ),
+                          child: const Text(
+                            "Register",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
                           ),
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SignIn()),
-                            );
-                          },
-                          child: const Text(
-                            textAlign: TextAlign.center,
-                            "Log In",
+                      ), //register button
+                      const SizedBox(
+                        height: 25.0,
+                      ),
+
+                      Row(
+                        children: [
+                          const Text(
+                            "I already have account, ",
                             style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
                               fontSize: 15.0,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
+                          InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const SignIn()),
+                              );
+                            },
+                            child: const Text(
+                              textAlign: TextAlign.center,
+                              "Log In",
+                              style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15.0,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

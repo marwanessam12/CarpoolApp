@@ -3,8 +3,15 @@ import 'package:carpool/features/home/presentation/widgets/Driver_controller.dar
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class DriverScreen extends StatelessWidget {
+class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
+
+  @override
+  State<DriverScreen> createState() => _DriverScreenState();
+}
+
+class _DriverScreenState extends State<DriverScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -17,184 +24,253 @@ class DriverScreen extends StatelessWidget {
             SafeArea(
                 child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Column(children: <Widget>[
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back_rounded,
-                          color: Colors.black),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ), //arrow back
-                  ],
-                ),
-                const Text(
-                  "Register as driver",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                    fontSize: 20.0,
+              child: Form(
+                key: _formKey,
+                child: Column(children: <Widget>[
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_rounded,
+                            color: Colors.black),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ), //arrow back
+                    ],
                   ),
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: drivercontroller.car_type,
-                        decoration: const InputDecoration(
-                          labelText: 'Car type',
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          border: OutlineInputBorder(),
-                          hintText: 'Car type',
-                        ),
-                      ),
-                    ), //first name
-                    const SizedBox(
-                      width: 10.0,
+                  const Text(
+                    "Register as driver",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                      fontSize: 20.0,
                     ),
-                    Expanded(
-                      child: TextField(
-                        controller: drivercontroller.car_model,
-                        decoration: const InputDecoration(
-                          labelText: ' Model',
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          border: OutlineInputBorder(),
-                          hintText: 'Model',
-                        ),
-                      ),
-                    ), //last name
-                  ],
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: drivercontroller.car_year,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Year',
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          border: OutlineInputBorder(),
-                          hintText: 'Model year',
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: drivercontroller.car_color,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: 'Colour',
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          border: OutlineInputBorder(),
-                          hintText: 'Car Colour',
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: drivercontroller.car_letters,
-                        decoration: const InputDecoration(
-                          labelText: 'letters',
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          border: OutlineInputBorder(),
-                          hintText: 'car plates letters',
-                        ),
-                      ),
-                    ), //first name
-                    const SizedBox(
-                      width: 10.0,
-                    ),
-                    Expanded(
-                      child: TextField(
-                        controller: drivercontroller.car_numbers,
-                        keyboardType: TextInputType.number,
-                        decoration: const InputDecoration(
-                          labelText: ' Numbers',
-                          floatingLabelBehavior: FloatingLabelBehavior.auto,
-                          border: OutlineInputBorder(),
-                          hintText: 'carplates Numbers',
-                        ),
-                      ),
-                    ), //last name
-                  ],
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                TextField(
-                  controller: drivercontroller.nationalID,
-                  keyboardType: TextInputType.number,
-                  decoration: const InputDecoration(
-                    labelText: 'national ID number',
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    border: OutlineInputBorder(),
-                    hintText: 'enter your national id number',
                   ),
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                TextField(
-                  controller: drivercontroller.license,
-                  decoration: const InputDecoration(
-                    labelText: 'license',
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    border: OutlineInputBorder(),
-                    hintText: 'license',
+                  const SizedBox(
+                    height: 15.0,
                   ),
-                ),
-                const SizedBox(
-                  height: 15.0,
-                ),
-                SizedBox(
-                  width: MediaQuery.sizeOf(context).width,
-                  child: TextButton(
-                    onPressed: () {
-                      final driver = DriverModel(
-                        car_type: drivercontroller.car_type.text.trim(),
-                        car_model: drivercontroller.car_model.text.trim(),
-                        car_year:
-                            int.parse(drivercontroller.car_year.text.trim()),
-                        car_color: drivercontroller.car_color.text.trim(),
-                        car_letters: drivercontroller.car_letters.text.trim(),
-                        car_numbers:
-                            int.parse(drivercontroller.car_numbers.text.trim()),
-                        nationalID:
-                            int.parse(drivercontroller.nationalID.text.trim()),
-                        license: drivercontroller.license.text.trim(),
-                      );
-                      DriverController.instance.createUser(driver);
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: drivercontroller.car_type,
+                          decoration: const InputDecoration(
+                            labelText: 'Car type',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            border: OutlineInputBorder(),
+                            hintText: 'Car type',
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '*Please enter car type';
+                            }
+                            return null;
+                          },
+                        ),
+                      ), // Car type
+                      const SizedBox(width: 5.0),
+                      Expanded(
+                        child: TextFormField(
+                          controller: drivercontroller.car_model,
+                          decoration: const InputDecoration(
+                            labelText: 'Model',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            border: OutlineInputBorder(),
+                            hintText: 'Model',
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '*Please enter model';
+                            }
+                            return null;
+                          },
+                        ),
+                      ), // Model
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: drivercontroller.car_year,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Year',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            border: OutlineInputBorder(),
+                            hintText: 'Model year',
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '*Please enter car year';
+                            }
+                            if (int.tryParse(value) == null) {
+                              return '*Please enter a valid year';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 5.0),
+                      Expanded(
+                        child: TextFormField(
+                          controller: drivercontroller.car_color,
+                          decoration: const InputDecoration(
+                            labelText: 'Colour',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            border: OutlineInputBorder(),
+                            hintText: 'Car Colour',
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '*Please enter car colour';
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextFormField(
+                          controller: drivercontroller.car_letters,
+                          decoration: const InputDecoration(
+                            labelText: 'Letters',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            border: OutlineInputBorder(),
+                            hintText: 'Car plates letters',
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '*Please enter car letters';
+                            }
+                            return null;
+                          },
+                        ),
+                      ), // Car letters
+                      const SizedBox(width: 5.0),
+                      Expanded(
+                        child: TextFormField(
+                          controller: drivercontroller.car_numbers,
+                          keyboardType: TextInputType.number,
+                          decoration: const InputDecoration(
+                            labelText: 'Numbers',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            border: OutlineInputBorder(),
+                            hintText: 'Car plates Numbers',
+                            errorBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: Colors.red),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return '*Please enter car numbers';
+                            }
+                            if (int.tryParse(value) == null) {
+                              return '*Please enter valid numbers';
+                            }
+                            return null;
+                          },
+                        ),
+                      ), // Car numbers
+                    ],
+                  ),
+                  const SizedBox(height: 15.0),
+                  TextFormField(
+                    controller: drivercontroller.nationalID,
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                      labelText: 'National ID number',
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      border: OutlineInputBorder(),
+                      hintText: 'Enter your national ID number',
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '*Please enter your national ID';
+                      }
+                      if (int.tryParse(value) == null) {
+                        return '*Please enter a valid national ID';
+                      }
+                      return null;
                     },
-                    style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      foregroundColor: Colors.white,
+                  ),
+                  const SizedBox(height: 15.0),
+                  TextFormField(
+                    controller: drivercontroller.license,
+                    decoration: const InputDecoration(
+                      labelText: 'License',
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                      border: OutlineInputBorder(),
+                      hintText: 'License',
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                      ),
                     ),
-                    child: const Text(
-                      "Register now",
-                      style: TextStyle(
-                        //fontWeight: FontWeight.bold,
-                        fontSize: 18.0,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return '*Please enter your license';
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 15.0),
+                  SizedBox(
+                    width: MediaQuery.sizeOf(context).width,
+                    child: TextButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          final driver = DriverModel(
+                            car_type: drivercontroller.car_type.text.trim(),
+                            car_model: drivercontroller.car_model.text.trim(),
+                            car_year: int.parse(
+                                drivercontroller.car_year.text.trim()),
+                            car_color: drivercontroller.car_color.text.trim(),
+                            car_letters:
+                                drivercontroller.car_letters.text.trim(),
+                            car_numbers: int.parse(
+                                drivercontroller.car_numbers.text.trim()),
+                            nationalID: int.parse(
+                                drivercontroller.nationalID.text.trim()),
+                            license: drivercontroller.license.text.trim(),
+                          );
+                          DriverController.instance.createUser(driver);
+                        }
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const Text(
+                        "Register now",
+                        style: TextStyle(
+                          fontSize: 18.0,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ]),
+                ]),
+              ),
             ))
           ],
         ),

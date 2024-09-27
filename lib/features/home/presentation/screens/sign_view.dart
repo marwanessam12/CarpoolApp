@@ -16,7 +16,7 @@ class SignningView extends StatelessWidget {
             SafeArea(
                 child: Padding(
               padding: const EdgeInsets.only(
-                  bottom: 90, left: 8.0, right: 8.0, top: 10.0),
+                  bottom: 8.0, left: 8.0, right: 8.0, top: 10.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -38,6 +38,7 @@ class SignningView extends StatelessWidget {
                     width: 300,
                     height: 300,
                   ),
+                  const SizedBox(height: 50),
                   const Text(
                     textAlign: TextAlign.center,
                     "Your ride, Your Choice",
@@ -50,6 +51,7 @@ class SignningView extends StatelessWidget {
                     children: [
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width,
+                        height: 50,
                         child: TextButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(
@@ -71,8 +73,10 @@ class SignningView extends StatelessWidget {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 10),
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width,
+                        height: 50,
                         child: OutlinedButton(
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(
