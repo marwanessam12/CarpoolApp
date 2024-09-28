@@ -53,6 +53,12 @@ class _DriverScreenState extends State<DriverScreen> {
                       Expanded(
                         child: TextFormField(
                           controller: drivercontroller.car_type,
+                          onChanged: (value) {
+                            setState(() {
+                              _formKey.currentState!
+                                  .validate(); // Manually trigger validation
+                            });
+                          },
                           decoration: const InputDecoration(
                             labelText: 'Car type',
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -74,6 +80,12 @@ class _DriverScreenState extends State<DriverScreen> {
                       Expanded(
                         child: TextFormField(
                           controller: drivercontroller.car_model,
+                          onChanged: (value) {
+                            setState(() {
+                              _formKey.currentState!
+                                  .validate(); // Manually trigger validation
+                            });
+                          },
                           decoration: const InputDecoration(
                             labelText: 'Model',
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -99,6 +111,12 @@ class _DriverScreenState extends State<DriverScreen> {
                       Expanded(
                         child: TextFormField(
                           controller: drivercontroller.car_year,
+                          onChanged: (value) {
+                            setState(() {
+                              _formKey.currentState!
+                                  .validate(); // Manually trigger validation
+                            });
+                          },
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             labelText: 'Year',
@@ -124,6 +142,12 @@ class _DriverScreenState extends State<DriverScreen> {
                       Expanded(
                         child: TextFormField(
                           controller: drivercontroller.car_color,
+                          onChanged: (value) {
+                            setState(() {
+                              _formKey.currentState!
+                                  .validate(); // Manually trigger validation
+                            });
+                          },
                           decoration: const InputDecoration(
                             labelText: 'Colour',
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -149,6 +173,12 @@ class _DriverScreenState extends State<DriverScreen> {
                       Expanded(
                         child: TextFormField(
                           controller: drivercontroller.car_letters,
+                          onChanged: (value) {
+                            setState(() {
+                              _formKey.currentState!
+                                  .validate(); // Manually trigger validation
+                            });
+                          },
                           decoration: const InputDecoration(
                             labelText: 'Letters',
                             floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -170,6 +200,12 @@ class _DriverScreenState extends State<DriverScreen> {
                       Expanded(
                         child: TextFormField(
                           controller: drivercontroller.car_numbers,
+                          onChanged: (value) {
+                            setState(() {
+                              _formKey.currentState!
+                                  .validate(); // Manually trigger validation
+                            });
+                          },
                           keyboardType: TextInputType.number,
                           decoration: const InputDecoration(
                             labelText: 'Numbers',
@@ -196,6 +232,12 @@ class _DriverScreenState extends State<DriverScreen> {
                   const SizedBox(height: 15.0),
                   TextFormField(
                     controller: drivercontroller.nationalID,
+                    onChanged: (value) {
+                      setState(() {
+                        _formKey.currentState!
+                            .validate(); // Manually trigger validation
+                      });
+                    },
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       labelText: 'National ID number',
@@ -219,6 +261,12 @@ class _DriverScreenState extends State<DriverScreen> {
                   const SizedBox(height: 15.0),
                   TextFormField(
                     controller: drivercontroller.license,
+                    onChanged: (value) {
+                      setState(() {
+                        _formKey.currentState!
+                            .validate(); // Manually trigger validation
+                      });
+                    },
                     decoration: const InputDecoration(
                       labelText: 'License',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,

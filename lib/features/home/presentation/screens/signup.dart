@@ -5,6 +5,7 @@ import 'package:carpool/features/home/presentation/widgets/common_appbar.dart';
 import 'package:carpool/features/home/presentation/widgets/signup_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../repository/user repository/user_repository.dart';
@@ -61,7 +62,13 @@ class _SignUpState extends State<SignUp> {
                           Expanded(
                             child: TextFormField(
                               controller: controller.firstname,
-                              onChanged: (value) => userName = value,
+                              onChanged: (value) {
+                                setState(() {
+                                  userName = value;
+                                  _formKey.currentState!
+                                      .validate(); // Manually trigger validation
+                                });
+                              },
                               decoration: const InputDecoration(
                                 labelText: 'First Name',
                                 floatingLabelBehavior:
@@ -71,7 +78,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'First Name cannot be empty';
+                                  return 'First Name is required';
                                 }
                                 return null;
                               },
@@ -83,6 +90,12 @@ class _SignUpState extends State<SignUp> {
                           Expanded(
                             child: TextFormField(
                               controller: controller.lastname,
+                              onChanged: (value) {
+                                setState(() {
+                                  _formKey.currentState!
+                                      .validate(); // Manually trigger validation
+                                });
+                              },
                               decoration: const InputDecoration(
                                 labelText: 'Last Name',
                                 floatingLabelBehavior:
@@ -92,7 +105,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return 'Last Name cannot be empty';
+                                  return 'Last Name is required';
                                 }
                                 return null;
                               },
@@ -107,7 +120,17 @@ class _SignUpState extends State<SignUp> {
                       TextFormField(
                         keyboardType: TextInputType.number,
                         controller: controller.id,
-                        onChanged: (value) => userId = value,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ], // Restrict to numbers only
+
+                        onChanged: (value) {
+                          setState(() {
+                            userId = value;
+                            _formKey.currentState!
+                                .validate(); // Manually trigger validation
+                          });
+                        },
                         decoration: const InputDecoration(
                           labelText: 'ID',
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -133,6 +156,15 @@ class _SignUpState extends State<SignUp> {
                           Expanded(
                             child: TextFormField(
                               keyboardType: TextInputType.number,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly
+                              ],
+                              onChanged: (value) {
+                                setState(() {
+                                  _formKey.currentState!
+                                      .validate(); // Manually trigger validation
+                                });
+                              },
                               controller: controller.age,
                               decoration: const InputDecoration(
                                 labelText: 'Age',
@@ -190,6 +222,15 @@ class _SignUpState extends State<SignUp> {
 
                       TextFormField(
                         keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _formKey.currentState!
+                                .validate(); // Manually trigger validation
+                          });
+                        },
                         controller: controller.mobileNumber,
                         decoration: const InputDecoration(
                           labelText: 'Mobile Number',
@@ -212,7 +253,13 @@ class _SignUpState extends State<SignUp> {
 
                       TextFormField(
                         controller: controller.email,
-                        onChanged: (value) => userEmail = value,
+                        onChanged: (value) {
+                          setState(() {
+                            userEmail = value;
+                            _formKey.currentState!
+                                .validate(); // Manually trigger validation
+                          });
+                        },
                         decoration: const InputDecoration(
                           labelText: 'Email',
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -224,7 +271,7 @@ class _SignUpState extends State<SignUp> {
                             return 'Email is required';
                           } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@nu\.edu\.eg$')
                               .hasMatch(value)) {
-                            return 'Please enter a email @nu.edu.eg ';
+                            return 'invalid email address ';
                           }
                           return null;
                         },

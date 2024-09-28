@@ -26,6 +26,11 @@ class _PasswordFormState extends State<PasswordForm> {
         // Password Field
         TextFormField(
           controller: widget.passwordFieldController,
+          onChanged: (value) {
+            setState(() {
+              widget.formKey.currentState!.validate(); // Validate on change
+            });
+          },
           obscureText: _obscureTextPassword,
           decoration: InputDecoration(
             labelText: 'Password',
@@ -55,6 +60,11 @@ class _PasswordFormState extends State<PasswordForm> {
         // Confirm Password Field
         TextFormField(
           controller: _confirmPasswordController,
+          onChanged: (value) {
+            setState(() {
+              widget.formKey.currentState!.validate(); // Validate on change
+            });
+          },
           obscureText: _obscureTextConfirmPassword,
           decoration: InputDecoration(
             labelText: 'Confirm Password',
