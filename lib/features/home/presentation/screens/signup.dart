@@ -3,6 +3,7 @@ import 'package:carpool/features/home/presentation/screens/otp_screen.dart';
 import 'package:carpool/features/home/presentation/widgets/Passfieldsignup.dart';
 import 'package:carpool/features/home/presentation/widgets/common_appbar.dart';
 import 'package:carpool/features/home/presentation/widgets/signup_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,8 @@ class _SignUpState extends State<SignUp> {
   void createUser(UserModel user) {
     userRepo.createUser((user));
   }
+
+  bool isEmailUnique = true; // Variable to track uniqueness
 
   final _formKey = GlobalKey<FormState>();
 
@@ -250,15 +253,33 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(
                         height: 15.0,
                       ),
-
                       TextFormField(
                         controller: controller.email,
-                        onChanged: (value) {
+                        onChanged: (value) async {
                           setState(() {
                             userEmail = value;
-                            _formKey.currentState!
-                                .validate(); // Manually trigger validation
                           });
+
+                          // Firestore check for email uniqueness
+                          final querySnapshot = await FirebaseFirestore.instance
+                              .collection(
+                                  'users') // Replace with your collection name
+                              .where('email', isEqualTo: value)
+                              .get();
+
+                          if (querySnapshot.docs.isNotEmpty) {
+                            // If the email already exists, mark it as non-unique
+                            setState(() {
+                              isEmailUnique = false;
+                            });
+                          } else {
+                            setState(() {
+                              isEmailUnique = true;
+                            });
+                          }
+
+                          // Manually trigger form validation
+                          _formKey.currentState!.validate();
                         },
                         decoration: const InputDecoration(
                           labelText: 'Email',
@@ -271,11 +292,14 @@ class _SignUpState extends State<SignUp> {
                             return 'Email is required';
                           } else if (!RegExp(r'^[a-zA-Z0-9._%+-]+@nu\.edu\.eg$')
                               .hasMatch(value)) {
-                            return 'invalid email address ';
+                            return 'Invalid email address';
+                          } else if (!isEmailUnique) {
+                            return 'Email already exists';
                           }
                           return null;
                         },
-                      ), //email
+                      ),
+
                       const SizedBox(
                         height: 15.0,
                       ),
