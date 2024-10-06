@@ -1,7 +1,12 @@
+import 'dart:io';
+
+import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/driver_model.dart';
 import 'package:carpool/features/home/presentation/widgets/Driver_controller.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 //validated gedan
 class DriverScreen extends StatefulWidget {
@@ -13,6 +18,9 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  String imageUrl = '';
+  bool driverImageUploaded = false; // Track if the image is uploaded
+  bool carImageUploaded = false; // Track if the image is uploaded
 
   @override
   Widget build(BuildContext context) {
@@ -258,30 +266,121 @@ class _DriverScreenState extends State<DriverScreen> {
                       return null;
                     },
                   ),
-                  const SizedBox(height: 15.0),
-                  TextFormField(
-                    controller: drivercontroller.license,
-                    onChanged: (value) {
-                      setState(() {
-                        _formKey.currentState!
-                            .validate(); // Manually trigger validation
-                      });
-                    },
-                    decoration: const InputDecoration(
-                      labelText: 'License',
-                      floatingLabelBehavior: FloatingLabelBehavior.auto,
-                      border: OutlineInputBorder(),
-                      hintText: 'License',
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red),
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return '*Please enter your license';
+                  const SizedBox(height: 10.0),
+                  OutlinedButton(
+                    onPressed: () async {
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? file = await imagePicker.pickImage(
+                          source: ImageSource.camera);
+                      print('${file?.path}');
+                      if (file == null) return;
+
+                      DateTime.now().millisecondsSinceEpoch.toString();
+
+                      Reference referenceRoot = FirebaseStorage.instance.ref();
+                      Reference referenceDirImages =
+                          referenceRoot.child('images');
+                      Reference referenceImageToUpload =
+                          referenceDirImages.child('$userId/Car license');
+
+                      try {
+                        await referenceImageToUpload.putFile(File(file.path));
+                        imageUrl =
+                            await referenceImageToUpload.getDownloadURL();
+
+                        // Update state to mark that the image has been uploaded
+                        setState(() {
+                          driverImageUploaded =
+                              true; // Image uploaded successfully
+                        });
+                      } catch (error) {
+                        print(error);
                       }
-                      return null;
                     },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(0), // Rounded corners
+                      ),
+                      side: BorderSide(
+                          color: driverImageUploaded
+                              ? Colors.grey[700]!
+                              : Colors.red), // Red border if not uploaded
+                      foregroundColor: driverImageUploaded
+                          ? Colors.green
+                          : Colors.red, // Red text and icon if not uploaded
+                      minimumSize: const Size.fromHeight(50),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal:
+                              16), // Adjust padding to match TextFormField height
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(driverImageUploaded
+                            ? 'Uploaded successfully'
+                            : 'Upload Driver license image'),
+                        const Icon(Icons.camera_alt),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10.0),
+                  OutlinedButton(
+                    onPressed: () async {
+                      ImagePicker imagePicker = ImagePicker();
+                      XFile? file = await imagePicker.pickImage(
+                          source: ImageSource.camera);
+                      print('${file?.path}');
+                      if (file == null) return;
+
+                      DateTime.now().millisecondsSinceEpoch.toString();
+
+                      Reference referenceRoot = FirebaseStorage.instance.ref();
+                      Reference referenceDirImages =
+                          referenceRoot.child('images');
+                      Reference referenceImageToUpload =
+                          referenceDirImages.child('$userId/Car license');
+
+                      try {
+                        await referenceImageToUpload.putFile(File(file.path));
+                        imageUrl =
+                            await referenceImageToUpload.getDownloadURL();
+
+                        // Update state to mark that the image has been uploaded
+                        setState(() {
+                          carImageUploaded =
+                              true; // Image uploaded successfully
+                        });
+                      } catch (error) {
+                        print(error);
+                      }
+                    },
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(0), // Rounded corners
+                      ),
+                      side: BorderSide(
+                          color: carImageUploaded
+                              ? Colors.grey[700]!
+                              : Colors.red), // Red border if not uploaded
+                      foregroundColor: carImageUploaded
+                          ? Colors.green
+                          : Colors.red, // Red text and icon if not uploaded
+                      minimumSize: const Size.fromHeight(50),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal:
+                              16), // Adjust padding to match TextFormField height
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(carImageUploaded
+                            ? 'Uploaded successfully'
+                            : 'Upload Car license image'),
+                        const Icon(Icons.camera_alt),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 15.0),
                   SizedBox(
