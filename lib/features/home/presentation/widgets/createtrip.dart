@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // For formatting the date
 
 class CreateTrip extends StatefulWidget {
   const CreateTrip({super.key});
@@ -17,6 +18,7 @@ class _CreateTripState extends State<CreateTrip> {
   String? selectedTime; // Variable to store the selected arrival time
   String?
       selectedDepartureTime; // Variable to store the selected departure time
+  DateTime selectedDate = DateTime.now(); // Initialize with today's date
   List<String> arrivalTimeOptions = [
     '--', // Placeholder option
     '8.15',
@@ -80,6 +82,22 @@ class _CreateTripState extends State<CreateTrip> {
     }
   }
 
+  // Function to open a date picker
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate, // Initialize with the current selected date
+      firstDate: DateTime.now(), // No earlier date than today
+      lastDate: DateTime(2100), // Some reasonable future date
+    );
+
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate; // Update the selected date
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -101,7 +119,7 @@ class _CreateTripState extends State<CreateTrip> {
               style: TextStyle(
                 fontSize: 12.0,
               ),
-              textAlign: TextAlign.center, // Center text horizontally
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
             Row(
@@ -116,7 +134,6 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextFormField(
-                    //controller:
                     decoration: const InputDecoration(
                       labelText: 'Starting location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -128,7 +145,6 @@ class _CreateTripState extends State<CreateTrip> {
               ],
             ),
             const SizedBox(height: 10.0),
-            // To Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -141,8 +157,6 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(width: 35),
                 Expanded(
                   child: TextFormField(
-                    //controller:
-
                     decoration: const InputDecoration(
                       labelText: 'Arriving location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -154,11 +168,8 @@ class _CreateTripState extends State<CreateTrip> {
               ],
             ),
             const SizedBox(height: 10.0),
-
-            // Departure Time Row
             GestureDetector(
-              onTap: () => _selectDepartureTime(
-                  context), // Open time picker for dep time
+              onTap: () => _selectDepartureTime(context),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -168,7 +179,7 @@ class _CreateTripState extends State<CreateTrip> {
                       fontSize: 18.0,
                     ),
                   ),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 25),
                   Expanded(
                     child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -192,8 +203,6 @@ class _CreateTripState extends State<CreateTrip> {
               ),
             ),
             const SizedBox(height: 10.0),
-
-            // Arrival Time Dropdown
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -204,7 +213,7 @@ class _CreateTripState extends State<CreateTrip> {
                   ),
                 ),
                 DropdownButton<String>(
-                  value: selectedTime, // Set the currently selected time
+                  value: selectedTime,
                   items: arrivalTimeOptions.map((String value) {
                     return DropdownMenuItem<String>(
                       value: value,
@@ -214,12 +223,9 @@ class _CreateTripState extends State<CreateTrip> {
                   onChanged: (value) {
                     setState(() {
                       if (value == 'Customize Arrival Time') {
-                        _selectCustomArrivalTime(
-                            context); // Open the custom time picker
+                        _selectCustomArrivalTime(context);
                       } else {
-                        selectedTime = value == '--'
-                            ? null
-                            : value; // Reset to null if '--' is selected
+                        selectedTime = value == '--' ? null : value;
                       }
                     });
                   },
@@ -233,8 +239,41 @@ class _CreateTripState extends State<CreateTrip> {
               ],
             ),
             const SizedBox(height: 10.0),
-
-            // Seats Row
+            // Date Picker
+            GestureDetector(
+              onTap: () => _selectDate(context), // Open date picker
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Trip Date',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(2.0),
+                      ),
+                      child: Text(
+                        DateFormat('dd-MM-yyyy')
+                            .format(selectedDate), // Display formatted date
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.black,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -247,17 +286,14 @@ class _CreateTripState extends State<CreateTrip> {
                 Row(
                   children: List.generate(3, (index) {
                     return Padding(
-                      padding: const EdgeInsets.only(
-                          right: 10.0), // Add right padding for spacing
+                      padding: const EdgeInsets.only(right: 10.0),
                       child: GestureDetector(
-                        onTap: () =>
-                            _toggleSeat(index), // Toggle seat selection
+                        onTap: () => _toggleSeat(index),
                         child: Icon(
                           Icons.chair,
-                          color: seatSelected[index]
-                              ? Colors.blue
-                              : Colors.grey, // Change color based on selection
-                          size: 30, // Optional: increase icon size
+                          color:
+                              seatSelected[index] ? Colors.blue : Colors.grey,
+                          size: 30,
                         ),
                       ),
                     );
@@ -266,8 +302,6 @@ class _CreateTripState extends State<CreateTrip> {
               ],
             ),
             const SizedBox(height: 16.0),
-
-            // Create Trip Button
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
@@ -275,7 +309,7 @@ class _CreateTripState extends State<CreateTrip> {
                   // Handle create trip logic
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Background color
+                  backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                 ),
                 child: const Text(

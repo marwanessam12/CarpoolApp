@@ -11,37 +11,66 @@ class DriverDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          UserAccountsDrawerHeader(
+          DrawerHeader(
             decoration: const BoxDecoration(
               color: Colors.grey,
             ),
-            accountName: Text(userName ?? ''),
-            accountEmail: Text(userEmail ?? ''),
-            currentAccountPicture: Row(
+            child: Column(
               children: [
-                const CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    'https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png',
-                  ),
+                Row(
+                  children: [
+                    const CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        'https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png',
+                      ),
+                      radius: 30, // Adjust the size of the avatar
+                    ),
+                    const SizedBox(width: 10), // Spacing between image and text
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          userName ?? '',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          userEmail ?? '',
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(
-                    width: 10), // Add some spacing between picture and rating
-                RatingBar.builder(
-                  initialRating: 0.0, // Default rating value
-                  minRating: 1,
-                  direction: Axis.horizontal,
-
-                  allowHalfRating: true,
-                  itemCount: 5,
-                  itemSize: 20.0, // Adjust size as needed
-                  itemPadding: const EdgeInsets.symmetric(horizontal: 2),
-                  itemBuilder: (context, _) => const Icon(
-                    Icons.star,
-                    color: Colors.blue,
-                  ),
-                  onRatingUpdate: (rating) {
-                    print(rating); // Update the rating if needed
-                  },
+                  height: 10,
+                ),
+                Row(
+                  children: [
+                    RatingBar.builder(
+                      itemSize: 30,
+                      initialRating: 4,
+                      minRating: 1,
+                      direction: Axis.horizontal,
+                      allowHalfRating: true,
+                      itemCount: 5,
+                      itemPadding: const EdgeInsets.symmetric(horizontal: 1.0),
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.blue,
+                      ),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
