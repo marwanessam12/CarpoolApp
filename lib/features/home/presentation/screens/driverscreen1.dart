@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/driver_model.dart';
+import 'package:carpool/features/home/presentation/screens/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/widgets/Driver_controller.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -281,7 +282,7 @@ class _DriverScreenState extends State<DriverScreen> {
                       Reference referenceDirImages =
                           referenceRoot.child('images');
                       Reference referenceImageToUpload =
-                          referenceDirImages.child('$userId/Car license');
+                          referenceDirImages.child('$userId/Driver license');
 
                       try {
                         await referenceImageToUpload.putFile(File(file.path));
@@ -404,6 +405,11 @@ class _DriverScreenState extends State<DriverScreen> {
                           );
                           DriverController.instance.createUser(driver);
                         }
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return DriverHome();
+                          },
+                        ));
                       },
                       style: TextButton.styleFrom(
                         backgroundColor: Colors.blue,
