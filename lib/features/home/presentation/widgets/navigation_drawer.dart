@@ -1,5 +1,6 @@
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/presentation/screens/driverscreen1.dart';
+import 'package:carpool/features/home/presentation/widgets/nav_widgets/settings.dart';
 import 'package:flutter/material.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -50,7 +51,13 @@ class NavDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       title: const Text('Settings'),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return const SettingsScreen();
+                          },
+                        ));
+                      },
                     ),
                   ],
                 ),

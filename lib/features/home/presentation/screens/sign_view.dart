@@ -1,6 +1,6 @@
 import 'package:carpool/features/home/presentation/screens/signin.dart';
 import 'package:carpool/features/home/presentation/screens/signup.dart';
-import 'package:carpool/features/home/presentation/widgets/common_appbar.dart';
+import 'package:carpool/features/home/presentation/widgets/signappbar.dart';
 import 'package:flutter/material.dart';
 
 class SignningView extends StatelessWidget {
@@ -20,7 +20,7 @@ class SignningView extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const CommonAppbar(),
+                  const SignAppbar(),
                   const Row(
                     children: [
                       Text(
