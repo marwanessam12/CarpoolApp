@@ -1,7 +1,6 @@
 import 'package:carpool/core/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_places_flutter/google_places_flutter.dart'; // For Google Places Autocomplete
 import 'package:intl/intl.dart'; // For formatting the date
 
 class CreateTrip extends StatefulWidget {
@@ -100,35 +99,13 @@ class _CreateTripState extends State<CreateTrip> {
                 const Text('From', style: TextStyle(fontSize: 18.0)),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: GooglePlaceAutoCompleteTextField(
-                    textEditingController: startLocationController,
-                    googleAPIKey: googleApiKey,
-                    inputDecoration: const InputDecoration(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
                       labelText: 'Starting location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       border: OutlineInputBorder(),
                       hintText: 'Enter departure location',
                     ),
-                    debounceTime:
-                        800, // Adjust debounce time as per your preference
-                    countries: const ["eg"], // Restrict search to Egypt
-                    isLatLngRequired:
-                        true, // If you need latitude and longitude
-                    getPlaceDetailWithLatLng: (prediction) {
-                      // Debugging prints
-                      print("Place: ${prediction.description}");
-                      print("Latitude: ${prediction.lat}");
-                      print("Longitude: ${prediction.lng}");
-                    },
-                    itemClick: (prediction) {
-                      setState(() {
-                        startLocationController.text = prediction.description!;
-                        startLocationController.selection =
-                            TextSelection.fromPosition(
-                          TextPosition(offset: prediction.description!.length),
-                        );
-                      });
-                    },
                   ),
                 ),
               ],
@@ -140,30 +117,13 @@ class _CreateTripState extends State<CreateTrip> {
                 const Text('To', style: TextStyle(fontSize: 18.0)),
                 const SizedBox(width: 35),
                 Expanded(
-                  child: GooglePlaceAutoCompleteTextField(
-                    textEditingController: arriveLocationController,
-                    googleAPIKey: googleApiKey,
-                    inputDecoration: const InputDecoration(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
                       labelText: 'Arriving location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       border: OutlineInputBorder(),
                       hintText: 'Enter destination location',
                     ),
-                    debounceTime: 800,
-                    countries: const ["eg"], // Restrict search to Egypt
-                    isLatLngRequired: true,
-                    getPlaceDetailWithLatLng: (prediction) {
-                      print("Place: ${prediction.description}");
-                      print("Latitude: ${prediction.lat}");
-                      print("Longitude: ${prediction.lng}");
-                    },
-                    itemClick: (prediction) {
-                      arriveLocationController.text = prediction.description!;
-                      arriveLocationController.selection =
-                          TextSelection.fromPosition(
-                        TextPosition(offset: prediction.description!.length),
-                      );
-                    },
                   ),
                 ),
               ],
@@ -291,8 +251,7 @@ class _CreateTripState extends State<CreateTrip> {
                 ),
               ],
             ),
-            const SizedBox(height: 10.0),
-
+            const SizedBox(height: 16.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -311,7 +270,6 @@ class _CreateTripState extends State<CreateTrip> {
                 ),
               ],
             ),
-            const SizedBox(height: 16.0),
             // Price Display
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
