@@ -1,6 +1,8 @@
 import 'package:carpool/core/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_webservice/places.dart';
 import 'package:intl/intl.dart'; // For formatting the date
 
 class CreateTrip extends StatefulWidget {
@@ -12,7 +14,6 @@ class CreateTrip extends StatefulWidget {
 
 class _CreateTripState extends State<CreateTrip> {
   bool _isSwitched = false;
-
   void _toggleSeat(int index) {
     if (selectedSeats < 3 || seatSelected[index]) {
       setState(() {
@@ -71,6 +72,98 @@ class _CreateTripState extends State<CreateTrip> {
     }
   }
 
+  GoogleMapController? mapController;
+  TextEditingController _originController = TextEditingController();
+  TextEditingController _destinationController = TextEditingController();
+  GoogleMapsPlaces _places = GoogleMapsPlaces(
+      apiKey:
+          "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); // Replace with your API Key
+  List<Prediction> _originPredictions = [];
+  List<Prediction> _destinationPredictions = [];
+  LatLng? _origin;
+  LatLng? _destination;
+  List<LatLng> _routeCoordinates = []; // To hold the route coordinates
+
+  void _onSearchChanged(String query, bool isOrigin) async {
+    if (query.isEmpty) {
+      setState(() {
+        isOrigin ? _originPredictions.clear() : _destinationPredictions.clear();
+      });
+      return;
+    }
+
+    final result = await _places.autocomplete(query,
+        components: [Component(Component.country, "EG")]); // Limit to Egypt
+
+    if (result.isOkay) {
+      setState(() {
+        if (isOrigin) {
+          _originPredictions = result.predictions;
+        } else {
+          _destinationPredictions = result.predictions;
+        }
+      });
+    } else {
+      print("Error: ${result.errorMessage}");
+    }
+  }
+
+  void _onPlaceSelected(Prediction prediction, bool isOrigin) async {
+    PlacesDetailsResponse detail =
+        await _places.getDetailsByPlaceId(prediction.placeId!);
+    LatLng location = LatLng(detail.result.geometry!.location.lat,
+        detail.result.geometry!.location.lng);
+
+    setState(() {
+      if (isOrigin) {
+        _origin = location;
+        _originController.text = prediction.description!;
+        _originPredictions.clear();
+      } else {
+        _destination = location;
+        _destinationController.text = prediction.description!;
+        _destinationPredictions.clear();
+      }
+    });
+  }
+
+  List<LatLng> _decodePoly(String poly) {
+    List<LatLng> polyline = [];
+    var numPoints = poly.length;
+    var index = 0;
+    while (index < numPoints) {
+      var lat = 0;
+      var lng = 0;
+      int b;
+      do {
+        b = poly.codeUnitAt(index++) - 63;
+        lat |= (b & 0x1f) << 5;
+      } while (b >= 0x20);
+      lat = ((lat & 1) != 0 ? ~(lat >> 1) : (lat >> 1));
+      do {
+        b = poly.codeUnitAt(index++) - 63;
+        lng |= (b & 0x1f) << 5;
+      } while (b >= 0x20);
+      lng = ((lng & 1) != 0 ? ~(lng >> 1) : (lng >> 1));
+      polyline.add(LatLng((lat / 1E5), (lng / 1E5)));
+    }
+    return polyline;
+  }
+
+  void _onMapTapped(LatLng tappedPosition) {
+    setState(() {
+      if (_origin == null) {
+        _origin = tappedPosition;
+        _originController.text =
+            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
+      } else if (_destination == null) {
+        _destination = tappedPosition;
+        _destinationController.text =
+            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,41 +186,117 @@ class _CreateTripState extends State<CreateTrip> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     const Text('From', style: TextStyle(fontSize: 18.0)),
+            //     const SizedBox(width: 10),
+            //     Expanded(
+            //       child: TextFormField(
+            //         decoration: const InputDecoration(
+            //           labelText: 'Starting location',
+            //           floatingLabelBehavior: FloatingLabelBehavior.auto,
+            //           border: OutlineInputBorder(),
+            //           hintText: 'Enter departure location',
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
+            // const SizedBox(height: 10.0),
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     const Text('To', style: TextStyle(fontSize: 18.0)),
+            //     const SizedBox(width: 35),
+            //     Expanded(
+            //       child: TextFormField(
+            //         decoration: const InputDecoration(
+            //           labelText: 'Arriving location',
+            //           floatingLabelBehavior: FloatingLabelBehavior.auto,
+            //           border: OutlineInputBorder(),
+            //           hintText: 'Enter destination location',
+            //         ),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('From', style: TextStyle(fontSize: 18.0)),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: TextFormField(
+                  child: TextField(
+                    controller: _originController,
                     decoration: const InputDecoration(
                       labelText: 'Starting location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       border: OutlineInputBorder(),
-                      hintText: 'Enter departure location',
+                      hintText: 'Enter Pickup point',
+                      suffixIcon: Icon(
+                        Icons.search,
+                      ),
                     ),
+                    onChanged: (value) {
+                      _onSearchChanged(value, true);
+                    },
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 10.0),
+
+            if (_originPredictions.isNotEmpty)
+              Container(
+                height: 100,
+                child: ListView.builder(
+                  itemCount: _originPredictions.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(_originPredictions[index].description!),
+                      onTap: () =>
+                          _onPlaceSelected(_originPredictions[index], true),
+                    );
+                  },
+                ),
+              ),
+            const SizedBox(height: 10),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('To', style: TextStyle(fontSize: 18.0)),
                 const SizedBox(width: 35),
                 Expanded(
-                  child: TextFormField(
+                  child: TextField(
+                    controller: _destinationController,
                     decoration: const InputDecoration(
-                      labelText: 'Arriving location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       border: OutlineInputBorder(),
-                      hintText: 'Enter destination location',
+                      labelText: 'Arriving location',
+                      suffixIcon: Icon(Icons.search),
                     ),
+                    onChanged: (value) {
+                      _onSearchChanged(value, false);
+                    },
                   ),
                 ),
               ],
             ),
+            if (_destinationPredictions.isNotEmpty)
+              Container(
+                height: 100,
+                child: ListView.builder(
+                  itemCount: _destinationPredictions.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(_destinationPredictions[index].description!),
+                      onTap: () => _onPlaceSelected(
+                          _destinationPredictions[index], false),
+                    );
+                  },
+                ),
+              ),
             const SizedBox(height: 10.0),
             GestureDetector(
               onTap: () => _selectDepartureTime(context),
@@ -227,7 +396,7 @@ class _CreateTripState extends State<CreateTrip> {
                 ],
               ),
             ),
-            const SizedBox(height: 10.0),
+            const SizedBox(height: 16.0),
             // Seats Selector
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -270,6 +439,8 @@ class _CreateTripState extends State<CreateTrip> {
                 ),
               ],
             ),
+            const SizedBox(height: 16.0),
+
             // Price Display
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

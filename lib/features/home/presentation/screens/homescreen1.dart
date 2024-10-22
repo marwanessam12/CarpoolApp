@@ -164,7 +164,9 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 TextField(
                   controller: _originController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
+                    labelText: 'Starting location',
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
                     hintText: 'Enter Pickup point',
                     prefixIcon: Icon(Icons.search),
                   ),
@@ -195,8 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 TextField(
                   controller: _destinationController,
-                  decoration: InputDecoration(
-                    hintText: 'Where to',
+                  decoration: const InputDecoration(
+                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    labelText: 'Where to',
                     prefixIcon: Icon(Icons.search),
                   ),
                   onChanged: (value) {
