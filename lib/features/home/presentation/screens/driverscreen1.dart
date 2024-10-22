@@ -339,22 +339,34 @@ class _DriverScreenState extends State<DriverScreen> {
                       ),
                       minimumSize: const Size.fromHeight(50),
                       padding: const EdgeInsets.symmetric(horizontal: 16),
+                      side: BorderSide(
+                        color: _DriverLicense != null
+                            ? Colors.green
+                            : Colors.grey[700]!, // Change border color
+                      ),
+                      foregroundColor: _DriverLicense != null
+                          ? Colors.green
+                          : Colors.grey[700]!,
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Upload Driver license image'),
+                        Text(
+                          _DriverLicense != null
+                              ? 'Driver license uploaded successfully'
+                              : 'Upload Driver license image',
+                        ),
                         Icon(Icons.camera_alt),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _DriverLicense != null
                       ? Image.file(_DriverLicense!, height: 100, width: 100)
-                      : Text('No image selected'),
-                  const SizedBox(height: 10.0),
+                      : const Text('No image selected'),
+                  const SizedBox(height: 10),
                   OutlinedButton(
-                    onPressed: _pickImage1,
+                    onPressed: _pickImage2,
                     style: OutlinedButton.styleFrom(
                       shape: RoundedRectangleBorder(
                         borderRadius:
@@ -362,19 +374,31 @@ class _DriverScreenState extends State<DriverScreen> {
                       ),
                       minimumSize: const Size.fromHeight(50),
                       padding: const EdgeInsets.symmetric(horizontal: 16),
+                      side: BorderSide(
+                        color: _CarLicense != null
+                            ? Colors.green
+                            : Colors.grey[700]!, // Change border color
+                      ),
+                      foregroundColor: _CarLicense != null
+                          ? Colors.green
+                          : Colors.grey[700]!,
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Upload Car license image'),
+                        Text(
+                          _CarLicense != null
+                              ? 'Car license uploaded successfully'
+                              : 'Upload Car license image',
+                        ),
                         Icon(Icons.camera_alt),
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   _CarLicense != null
                       ? Image.file(_CarLicense!, height: 100, width: 100)
-                      : Text('No image selected'),
+                      : const Text('No image selected'),
                   const SizedBox(height: 15.0),
                   SizedBox(
                       width: MediaQuery.sizeOf(context).width,
