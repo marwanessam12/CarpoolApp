@@ -330,132 +330,46 @@ class _DriverScreenState extends State<DriverScreen> {
                     },
                   ),
                   const SizedBox(height: 10.0),
-                  // OutlinedButton(
-                  //   onPressed: () async {
-                  //     ImagePicker imagePicker = ImagePicker();
-                  //     XFile? file = await imagePicker.pickImage(
-                  //         source: ImageSource.camera);
-                  //     print('${file?.path}');
-                  //     if (file == null) return;
-                  //
-                  //     DateTime.now().millisecondsSinceEpoch.toString();
-                  //
-                  //     Reference referenceRoot = FirebaseStorage.instance.ref();
-                  //     Reference referenceDirImages =
-                  //         referenceRoot.child('images');
-                  //     Reference referenceImageToUpload =
-                  //         referenceDirImages.child('$userId/Driver license');
-                  //
-                  //     try {
-                  //       await referenceImageToUpload.putFile(File(file.path));
-                  //       imageUrl =
-                  //           await referenceImageToUpload.getDownloadURL();
-                  //
-                  //       // Update state to mark that the image has been uploaded
-                  //       setState(() {
-                  //         driverImageUploaded =
-                  //             true; // Image uploaded successfully
-                  //       });
-                  //     } catch (error) {
-                  //       print(error);
-                  //     }
-                  //   },
-                  //   style: OutlinedButton.styleFrom(
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius:
-                  //           BorderRadius.circular(0), // Rounded corners
-                  //     ),
-                  //     side: BorderSide(
-                  //         color: driverImageUploaded
-                  //             ? Colors.grey[700]!
-                  //             : Colors.red), // Red border if not uploaded
-                  //     foregroundColor: driverImageUploaded
-                  //         ? Colors.green
-                  //         : Colors.red, // Red text and icon if not uploaded
-                  //     minimumSize: const Size.fromHeight(50),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal:
-                  //             16), // Adjust padding to match TextFormField height
-                  //   ),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text(driverImageUploaded
-                  //           ? 'Uploaded successfully'
-                  //           : 'Upload Driver license image'),
-                  //       const Icon(Icons.camera_alt),
-                  //     ],
-                  //   ),
-                  // ),
                   OutlinedButton(
                     onPressed: _pickImage1,
-                    child: Text('Upload Driver license image'),
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(0), // Rounded corners
+                      ),
+                      minimumSize: const Size.fromHeight(50),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Upload Driver license image'),
+                        Icon(Icons.camera_alt),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 10),
                   _DriverLicense != null
                       ? Image.file(_DriverLicense!, height: 100, width: 100)
                       : Text('No image selected'),
                   const SizedBox(height: 10.0),
-                  // OutlinedButton(
-                  //   onPressed: () async {
-                  //     ImagePicker imagePicker = ImagePicker();
-                  //     XFile? file = await imagePicker.pickImage(
-                  //         source: ImageSource.camera);
-                  //     print('${file?.path}');
-                  //     if (file == null) return;
-                  //
-                  //     DateTime.now().millisecondsSinceEpoch.toString();
-                  //
-                  //     Reference referenceRoot = FirebaseStorage.instance.ref();
-                  //     Reference referenceDirImages =
-                  //         referenceRoot.child('images');
-                  //     Reference referenceImageToUpload =
-                  //         referenceDirImages.child('$userId/Car license');
-                  //
-                  //     try {
-                  //       await referenceImageToUpload.putFile(File(file.path));
-                  //       imageUrl =
-                  //           await referenceImageToUpload.getDownloadURL();
-                  //
-                  //       // Update state to mark that the image has been uploaded
-                  //       setState(() {
-                  //         carImageUploaded =
-                  //             true; // Image uploaded successfully
-                  //       });
-                  //     } catch (error) {
-                  //       print(error);
-                  //     }
-                  //   },
-                  //   style: OutlinedButton.styleFrom(
-                  //     shape: RoundedRectangleBorder(
-                  //       borderRadius:
-                  //           BorderRadius.circular(0), // Rounded corners
-                  //     ),
-                  //     side: BorderSide(
-                  //         color: carImageUploaded
-                  //             ? Colors.grey[700]!
-                  //             : Colors.red), // Red border if not uploaded
-                  //     foregroundColor: carImageUploaded
-                  //         ? Colors.green
-                  //         : Colors.red, // Red text and icon if not uploaded
-                  //     minimumSize: const Size.fromHeight(50),
-                  //     padding: const EdgeInsets.symmetric(
-                  //         horizontal:
-                  //             16), // Adjust padding to match TextFormField height
-                  //   ),
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //     children: [
-                  //       Text(carImageUploaded
-                  //           ? 'Uploaded successfully'
-                  //           : 'Upload Car license image'),
-                  //       const Icon(Icons.camera_alt),
-                  //     ],
-                  //   ),
-                  // ),
                   OutlinedButton(
-                    onPressed: _pickImage2,
-                    child: Text('Upload Car License image'),
+                    onPressed: _pickImage1,
+                    style: OutlinedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(0), // Rounded corners
+                      ),
+                      minimumSize: const Size.fromHeight(50),
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Upload Car license image'),
+                        Icon(Icons.camera_alt),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 10),
                   _CarLicense != null
