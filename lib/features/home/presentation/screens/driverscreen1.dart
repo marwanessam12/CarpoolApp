@@ -1,15 +1,14 @@
 import 'dart:io';
 
-import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/driver_model.dart';
 import 'package:carpool/features/home/presentation/screens/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/widgets/Driver_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-//validated with image
 class DriverScreen extends StatefulWidget {
   const DriverScreen({super.key});
 
@@ -19,9 +18,72 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  String imageUrl = '';
-  bool driverImageUploaded = false; // Track if the image is uploaded
-  bool carImageUploaded = false; // Track if the image is uploaded
+  // String imageUrl = '';
+  // bool driverImageUploaded = false; // Track if the image is uploaded
+  // bool carImageUploaded = false; // Track if the image is uploaded
+  //
+  File? _DriverLicense;
+  File? _CarLicense;
+  final ImagePicker _picker = ImagePicker();
+
+  // Function to pick image
+  Future<void> _pickImage1() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _DriverLicense = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<void> _pickImage2() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _CarLicense = File(pickedFile.path);
+      });
+    }
+  }
+
+  // Function to upload images to Firebase Storage and store URLs in Firestore
+  Future<void> _registerNow() async {
+    if (_DriverLicense != null && _CarLicense != null) {
+      try {
+        // Upload first image
+        String imageUrl1 = await _uploadImageToStorage(_DriverLicense!);
+        // Upload second image
+        String imageUrl2 = await _uploadImageToStorage(_CarLicense!);
+
+        // Save the URLs to Firestore
+        await FirebaseFirestore.instance.collection('users').add({
+          'imageUrl1': imageUrl1,
+          'imageUrl2': imageUrl2,
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Images uploaded successfully!')),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to upload images: $e')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please select both images')),
+      );
+    }
+  }
+
+  // Function to upload image to Firebase Storage
+  Future<String> _uploadImageToStorage(File image) async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    Reference storageReference =
+        FirebaseStorage.instance.ref().child('user_images/$fileName');
+    UploadTask uploadTask = storageReference.putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    return await taskSnapshot.ref.getDownloadURL();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -268,161 +330,180 @@ class _DriverScreenState extends State<DriverScreen> {
                     },
                   ),
                   const SizedBox(height: 10.0),
+                  // OutlinedButton(
+                  //   onPressed: () async {
+                  //     ImagePicker imagePicker = ImagePicker();
+                  //     XFile? file = await imagePicker.pickImage(
+                  //         source: ImageSource.camera);
+                  //     print('${file?.path}');
+                  //     if (file == null) return;
+                  //
+                  //     DateTime.now().millisecondsSinceEpoch.toString();
+                  //
+                  //     Reference referenceRoot = FirebaseStorage.instance.ref();
+                  //     Reference referenceDirImages =
+                  //         referenceRoot.child('images');
+                  //     Reference referenceImageToUpload =
+                  //         referenceDirImages.child('$userId/Driver license');
+                  //
+                  //     try {
+                  //       await referenceImageToUpload.putFile(File(file.path));
+                  //       imageUrl =
+                  //           await referenceImageToUpload.getDownloadURL();
+                  //
+                  //       // Update state to mark that the image has been uploaded
+                  //       setState(() {
+                  //         driverImageUploaded =
+                  //             true; // Image uploaded successfully
+                  //       });
+                  //     } catch (error) {
+                  //       print(error);
+                  //     }
+                  //   },
+                  //   style: OutlinedButton.styleFrom(
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius:
+                  //           BorderRadius.circular(0), // Rounded corners
+                  //     ),
+                  //     side: BorderSide(
+                  //         color: driverImageUploaded
+                  //             ? Colors.grey[700]!
+                  //             : Colors.red), // Red border if not uploaded
+                  //     foregroundColor: driverImageUploaded
+                  //         ? Colors.green
+                  //         : Colors.red, // Red text and icon if not uploaded
+                  //     minimumSize: const Size.fromHeight(50),
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal:
+                  //             16), // Adjust padding to match TextFormField height
+                  //   ),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Text(driverImageUploaded
+                  //           ? 'Uploaded successfully'
+                  //           : 'Upload Driver license image'),
+                  //       const Icon(Icons.camera_alt),
+                  //     ],
+                  //   ),
+                  // ),
                   OutlinedButton(
-                    onPressed: () async {
-                      ImagePicker imagePicker = ImagePicker();
-                      XFile? file = await imagePicker.pickImage(
-                          source: ImageSource.camera);
-                      print('${file?.path}');
-                      if (file == null) return;
-
-                      DateTime.now().millisecondsSinceEpoch.toString();
-
-                      Reference referenceRoot = FirebaseStorage.instance.ref();
-                      Reference referenceDirImages =
-                          referenceRoot.child('images');
-                      Reference referenceImageToUpload =
-                          referenceDirImages.child('$userId/Driver license');
-
-                      try {
-                        await referenceImageToUpload.putFile(File(file.path));
-                        imageUrl =
-                            await referenceImageToUpload.getDownloadURL();
-
-                        // Update state to mark that the image has been uploaded
-                        setState(() {
-                          driverImageUploaded =
-                              true; // Image uploaded successfully
-                        });
-                      } catch (error) {
-                        print(error);
-                      }
-                    },
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(0), // Rounded corners
-                      ),
-                      side: BorderSide(
-                          color: driverImageUploaded
-                              ? Colors.grey[700]!
-                              : Colors.red), // Red border if not uploaded
-                      foregroundColor: driverImageUploaded
-                          ? Colors.green
-                          : Colors.red, // Red text and icon if not uploaded
-                      minimumSize: const Size.fromHeight(50),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal:
-                              16), // Adjust padding to match TextFormField height
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(driverImageUploaded
-                            ? 'Uploaded successfully'
-                            : 'Upload Driver license image'),
-                        const Icon(Icons.camera_alt),
-                      ],
-                    ),
+                    onPressed: _pickImage1,
+                    child: Text('Upload Driver license image'),
                   ),
+                  SizedBox(height: 10),
+                  _DriverLicense != null
+                      ? Image.file(_DriverLicense!, height: 100, width: 100)
+                      : Text('No image selected'),
                   const SizedBox(height: 10.0),
+                  // OutlinedButton(
+                  //   onPressed: () async {
+                  //     ImagePicker imagePicker = ImagePicker();
+                  //     XFile? file = await imagePicker.pickImage(
+                  //         source: ImageSource.camera);
+                  //     print('${file?.path}');
+                  //     if (file == null) return;
+                  //
+                  //     DateTime.now().millisecondsSinceEpoch.toString();
+                  //
+                  //     Reference referenceRoot = FirebaseStorage.instance.ref();
+                  //     Reference referenceDirImages =
+                  //         referenceRoot.child('images');
+                  //     Reference referenceImageToUpload =
+                  //         referenceDirImages.child('$userId/Car license');
+                  //
+                  //     try {
+                  //       await referenceImageToUpload.putFile(File(file.path));
+                  //       imageUrl =
+                  //           await referenceImageToUpload.getDownloadURL();
+                  //
+                  //       // Update state to mark that the image has been uploaded
+                  //       setState(() {
+                  //         carImageUploaded =
+                  //             true; // Image uploaded successfully
+                  //       });
+                  //     } catch (error) {
+                  //       print(error);
+                  //     }
+                  //   },
+                  //   style: OutlinedButton.styleFrom(
+                  //     shape: RoundedRectangleBorder(
+                  //       borderRadius:
+                  //           BorderRadius.circular(0), // Rounded corners
+                  //     ),
+                  //     side: BorderSide(
+                  //         color: carImageUploaded
+                  //             ? Colors.grey[700]!
+                  //             : Colors.red), // Red border if not uploaded
+                  //     foregroundColor: carImageUploaded
+                  //         ? Colors.green
+                  //         : Colors.red, // Red text and icon if not uploaded
+                  //     minimumSize: const Size.fromHeight(50),
+                  //     padding: const EdgeInsets.symmetric(
+                  //         horizontal:
+                  //             16), // Adjust padding to match TextFormField height
+                  //   ),
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //     children: [
+                  //       Text(carImageUploaded
+                  //           ? 'Uploaded successfully'
+                  //           : 'Upload Car license image'),
+                  //       const Icon(Icons.camera_alt),
+                  //     ],
+                  //   ),
+                  // ),
                   OutlinedButton(
-                    onPressed: () async {
-                      ImagePicker imagePicker = ImagePicker();
-                      XFile? file = await imagePicker.pickImage(
-                          source: ImageSource.camera);
-                      print('${file?.path}');
-                      if (file == null) return;
-
-                      DateTime.now().millisecondsSinceEpoch.toString();
-
-                      Reference referenceRoot = FirebaseStorage.instance.ref();
-                      Reference referenceDirImages =
-                          referenceRoot.child('images');
-                      Reference referenceImageToUpload =
-                          referenceDirImages.child('$userId/Car license');
-
-                      try {
-                        await referenceImageToUpload.putFile(File(file.path));
-                        imageUrl =
-                            await referenceImageToUpload.getDownloadURL();
-
-                        // Update state to mark that the image has been uploaded
-                        setState(() {
-                          carImageUploaded =
-                              true; // Image uploaded successfully
-                        });
-                      } catch (error) {
-                        print(error);
-                      }
-                    },
-                    style: OutlinedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(0), // Rounded corners
-                      ),
-                      side: BorderSide(
-                          color: carImageUploaded
-                              ? Colors.grey[700]!
-                              : Colors.red), // Red border if not uploaded
-                      foregroundColor: carImageUploaded
-                          ? Colors.green
-                          : Colors.red, // Red text and icon if not uploaded
-                      minimumSize: const Size.fromHeight(50),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal:
-                              16), // Adjust padding to match TextFormField height
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(carImageUploaded
-                            ? 'Uploaded successfully'
-                            : 'Upload Car license image'),
-                        const Icon(Icons.camera_alt),
-                      ],
-                    ),
+                    onPressed: _pickImage2,
+                    child: Text('Upload Car License image'),
                   ),
+                  SizedBox(height: 10),
+                  _CarLicense != null
+                      ? Image.file(_CarLicense!, height: 100, width: 100)
+                      : Text('No image selected'),
                   const SizedBox(height: 15.0),
                   SizedBox(
-                    width: MediaQuery.sizeOf(context).width,
-                    child: TextButton(
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          final driver = DriverModel(
-                            car_type: drivercontroller.car_type.text.trim(),
-                            car_model: drivercontroller.car_model.text.trim(),
-                            car_year: int.parse(
-                                drivercontroller.car_year.text.trim()),
-                            car_color: drivercontroller.car_color.text.trim(),
-                            car_letters:
-                                drivercontroller.car_letters.text.trim(),
-                            car_numbers: int.parse(
-                                drivercontroller.car_numbers.text.trim()),
-                            nationalID: int.parse(
-                                drivercontroller.nationalID.text.trim()),
-                            license: drivercontroller.license.text.trim(),
-                          );
-                          DriverController.instance.createUser(driver);
-                        }
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return DriverHome();
-                          },
-                        ));
-                      },
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        "Register now",
-                        style: TextStyle(
-                          fontSize: 18.0,
+                      width: MediaQuery.sizeOf(context).width,
+                      child: TextButton(
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            await _registerNow(); // Call the _registerNow method to handle image uploads and Firestore entry
+
+                            final driver = DriverModel(
+                              car_type: drivercontroller.car_type.text.trim(),
+                              car_model: drivercontroller.car_model.text.trim(),
+                              car_year: int.parse(
+                                  drivercontroller.car_year.text.trim()),
+                              car_color: drivercontroller.car_color.text.trim(),
+                              car_letters:
+                                  drivercontroller.car_letters.text.trim(),
+                              car_numbers: int.parse(
+                                  drivercontroller.car_numbers.text.trim()),
+                              nationalID: int.parse(
+                                  drivercontroller.nationalID.text.trim()),
+                              license: drivercontroller.license.text.trim(),
+                            );
+
+                            DriverController.instance.createUser(driver);
+
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return DriverHome();
+                              },
+                            ));
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.blue,
+                          foregroundColor: Colors.white,
                         ),
-                      ),
-                    ),
-                  ),
+                        child: const Text(
+                          "Register now",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                          ),
+                        ),
+                      )),
                 ]),
               ),
             ))
