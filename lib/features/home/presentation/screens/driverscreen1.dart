@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/driver_model.dart';
 import 'package:carpool/features/home/presentation/screens/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/widgets/Driver_controller.dart';
@@ -45,23 +46,35 @@ class _DriverScreenState extends State<DriverScreen> {
     }
   }
 
-  // Function to upload images to Firebase Storage and store URLs in Firestore
+// Function to upload image to Firebase Storage
+  Future<String> _uploadImageToStorage(File image, String fileName) async {
+    Reference storageReference =
+        FirebaseStorage.instance.ref().child('images/$userId/$fileName');
+    UploadTask uploadTask = storageReference.putFile(image);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    return await taskSnapshot.ref.getDownloadURL();
+  }
+
+// Function to upload images to Firebase Storage and store URLs in Firestore
   Future<void> _registerNow() async {
     if (_DriverLicense != null && _CarLicense != null) {
       try {
-        // Upload first image
-        String imageUrl1 = await _uploadImageToStorage(_DriverLicense!);
-        // Upload second image
-        String imageUrl2 = await _uploadImageToStorage(_CarLicense!);
+        // Upload driver license image with custom name
+        String imageUrl1 = await _uploadImageToStorage(
+            _DriverLicense!, 'driver_license_image');
+
+        // Upload car license image with custom name
+        String imageUrl2 =
+            await _uploadImageToStorage(_CarLicense!, 'car_license_image');
 
         // Save the URLs to Firestore
         await FirebaseFirestore.instance.collection('users').add({
-          'imageUrl1': imageUrl1,
-          'imageUrl2': imageUrl2,
+          'driverLicenseUrl': imageUrl1,
+          'carLicenseUrl': imageUrl2,
         });
 
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Images uploaded successfully!')),
+          const SnackBar(content: Text('Images uploaded successfully!')),
         );
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -70,19 +83,9 @@ class _DriverScreenState extends State<DriverScreen> {
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please select both images')),
+        const SnackBar(content: Text('Please select both images')),
       );
     }
-  }
-
-  // Function to upload image to Firebase Storage
-  Future<String> _uploadImageToStorage(File image) async {
-    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('user_images/$fileName');
-    UploadTask uploadTask = storageReference.putFile(image);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    return await taskSnapshot.ref.getDownloadURL();
   }
 
   @override
