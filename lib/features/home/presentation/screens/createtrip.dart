@@ -18,8 +18,6 @@ class CreateTrip extends StatefulWidget {
 
 class _CreateTripState extends State<CreateTrip> {
   bool _isSwitched = false;
-  double tripPrice = 0.0; // Price variable
-  double tripDistance = 0.0; // Variable to store the distance
 
   // Method to calculate distance in kilometers
   double _calculateDistance(LatLng start, LatLng end) {

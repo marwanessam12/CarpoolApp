@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 String userEmail = '';
 String userName = '';
 String userId = '';
@@ -27,6 +25,6 @@ List<String> arrivalTimeOptions = [
   'Customize Arrival Time', // Add custom option
 ];
 double tripPrice = 0.0; // Initialize trip price with 0.0 EGP
-final startLocationController = TextEditingController();
-TextEditingController arriveLocationController = TextEditingController();
+double tripDistance = 0.0; // Variable to store the distance
+
 String googleApiKey = "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE";
