@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:carpool/core/constants.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,39 @@ class CreateTrip extends StatefulWidget {
 
 class _CreateTripState extends State<CreateTrip> {
   bool _isSwitched = false;
+  double tripPrice = 0.0; // Price variable
+  double tripDistance = 0.0; // Variable to store the distance
+
+  // Method to calculate distance in kilometers
+  double _calculateDistance(LatLng start, LatLng end) {
+    const earthRadius = 6371.0; // Radius of the Earth in km
+    double dLat = _degreesToRadians(end.latitude - start.latitude);
+    double dLon = _degreesToRadians(end.longitude - start.longitude);
+
+    double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degreesToRadians(start.latitude)) *
+            cos(_degreesToRadians(end.latitude)) *
+            sin(dLon / 2) *
+            sin(dLon / 2);
+    double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    return earthRadius * c;
+  }
+
+  double _degreesToRadians(double degrees) {
+    return degrees * pi / 180;
+  }
+
+  // Method to calculate price based on distance
+  void _calculatePrice() {
+    if (_origin != null && _destination != null) {
+      double distance = _calculateDistance(_origin!, _destination!);
+      setState(() {
+        tripDistance = distance; // Set trip distance
+        tripPrice = distance * 2; // 2 EGP per km
+      });
+    }
+  }
+
   void _toggleSeat(int index) {
     if (selectedSeats < 3 || seatSelected[index]) {
       setState(() {
@@ -124,6 +159,7 @@ class _CreateTripState extends State<CreateTrip> {
         _destinationController.text = prediction.description!;
         _destinationPredictions.clear();
       }
+      _calculatePrice();
     });
   }
 
@@ -446,11 +482,11 @@ class _CreateTripState extends State<CreateTrip> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Price (EGP)',
+                  'Kilometer',
                   style: TextStyle(fontSize: 18.0),
                 ),
                 Text(
-                  tripPrice.toStringAsFixed(2) + ' EGP',
+                  '${tripDistance.toStringAsFixed(2)} km', // Display trip distance
                   style: const TextStyle(
                     fontSize: 16.0,
                     color: Colors.black,
@@ -458,6 +494,27 @@ class _CreateTripState extends State<CreateTrip> {
                 ),
               ],
             ),
+
+            const SizedBox(height: 16.0),
+
+            // Price Display
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Price (EGP)',
+                  style: TextStyle(fontSize: 18.0),
+                ),
+                Text(
+                  '${tripPrice.toStringAsFixed(2)} EGP', // Display trip price
+                  style: const TextStyle(
+                    fontSize: 16.0,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+
             const SizedBox(height: 16.0),
             SizedBox(
               width: MediaQuery.of(context).size.width,
