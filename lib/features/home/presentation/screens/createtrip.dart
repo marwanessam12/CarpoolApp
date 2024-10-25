@@ -20,8 +20,20 @@ class CreateTrip extends StatefulWidget {
 }
 
 class _CreateTripState extends State<CreateTrip> {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _isSwitched = false;
+  bool isSwitched = false;
+  String tripType = "lazy trip"; // Default trip type
+
+  void _updateTripType(bool value) {
+    setState(() {
+      isSwitched = value;
+      // Update trip type based on switch state
+      tripType = isSwitched ? "fast trip" : "lazy trip";
+    });
+    // Save trip type or use it further as needed
+    print("Selected trip type: $tripType"); // Example usage
+  }
+
+  late RideController ridecontroller; // Define as a class-level variable
 
   // Method to calculate distance in kilometers
   double _calculateDistance(LatLng start, LatLng end) {
@@ -115,8 +127,7 @@ class _CreateTripState extends State<CreateTrip> {
   TextEditingController originController = TextEditingController();
   TextEditingController destinationController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(
-      apiKey:
-          "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); // Replace with your API Key
+      apiKey: "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); //  your API Key
   List<Prediction> _originPredictions = [];
   List<Prediction> _destinationPredictions = [];
   LatLng? _origin;
@@ -147,6 +158,13 @@ class _CreateTripState extends State<CreateTrip> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    ridecontroller = Get.put(RideController()); // Initialize ridecontroller
+  }
+
+  // Update _onPlaceSelected to use ridecontroller
   void _onPlaceSelected(Prediction prediction, bool isOrigin) async {
     PlacesDetailsResponse detail =
         await _places.getDetailsByPlaceId(prediction.placeId!);
@@ -156,11 +174,13 @@ class _CreateTripState extends State<CreateTrip> {
     setState(() {
       if (isOrigin) {
         _origin = location;
-        originController.text = prediction.description!;
+        ridecontroller.originController.text =
+            prediction.description!; // Use ridecontroller here
         _originPredictions.clear();
       } else {
         _destination = location;
-        destinationController.text = prediction.description!;
+        ridecontroller.destinationController.text =
+            prediction.description!; // Use ridecontroller here
         _destinationPredictions.clear();
       }
       _calculatePrice();
@@ -205,9 +225,8 @@ class _CreateTripState extends State<CreateTrip> {
   }
 
   @override
-
   Widget build(BuildContext context) {
-    final ridecontroller= Get.put(RideController());
+    final ridecontroller = Get.put(RideController());
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -236,9 +255,7 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
-
                     controller: ridecontroller.originController,
-
                     decoration: const InputDecoration(
                       labelText: 'Starting location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -250,10 +267,6 @@ class _CreateTripState extends State<CreateTrip> {
                     ),
                     onChanged: (value) {
                       _onSearchChanged(value, true);
-                      setState(() {
-                        _formKey.currentState!
-                            .validate(); // Manually trigger validation
-                      });
                     },
                   ),
                 ),
@@ -317,7 +330,8 @@ class _CreateTripState extends State<CreateTrip> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Depature Time', style: TextStyle(fontSize: 18.0)),
+                  const Text('Departure Time',
+                      style: TextStyle(fontSize: 18.0)),
                   const SizedBox(width: 15),
                   Expanded(
                     child: Container(
@@ -443,13 +457,9 @@ class _CreateTripState extends State<CreateTrip> {
                   style: TextStyle(fontSize: 18),
                 ),
                 CupertinoSwitch(
-                  value: _isSwitched,
+                  value: isSwitched,
                   activeColor: Colors.blue, // Set the active color to blue
-                  onChanged: (bool value) {
-                    setState(() {
-                      _isSwitched = value;
-                    });
-                  },
+                  onChanged: _updateTripType,
                 ),
               ],
             ),
@@ -460,7 +470,7 @@ class _CreateTripState extends State<CreateTrip> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Kilometer',
+                  'Kilometre',
                   style: TextStyle(fontSize: 18.0),
                 ),
                 Text(
@@ -497,16 +507,22 @@ class _CreateTripState extends State<CreateTrip> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
-
                 onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    final ride = RideModel(
-                      Starting_location: ridecontroller.originController.text.trim(),
-                      Arriving_location: ridecontroller.destinationController.text.trim(),
+                  final ride = RideModel(
+                    selectedDepartureTime: selectedDepartureTime,
+                    selectedTime: selectedTime,
+                    selectedDate: selectedDate,
+                    selectedSeats: selectedSeats,
+                    tipPrice: tripPrice,
+                    tripDistance: tripDistance,
+                    tripType: tripType,
+                    originController:
+                        ridecontroller.originController.text.trim(),
+                    destinationController:
+                        ridecontroller.destinationController.text.trim(),
+                  );
+                  RideController.instance.createRide(ride);
 
-                    );
-                    RideController.instance.createRide(ride);
-                  }
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return const CreatedSuccessfully();

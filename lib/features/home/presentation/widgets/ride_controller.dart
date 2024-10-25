@@ -3,8 +3,6 @@ import 'package:carpool/repository/user%20repository/ride_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
-
 class RideController extends GetxController {
   static RideController get instance => Get.find();
 
