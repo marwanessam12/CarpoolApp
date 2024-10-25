@@ -1,5 +1,6 @@
 import 'package:intl/intl.dart';
 
+//trip updated successfully to db
 class RideModel {
   final String? selectedTime;
   final String? selectedDepartureTime;
