@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:carpool/features/home/presentation/screens/userscreen2.dart';
 import 'package:carpool/features/home/presentation/widgets/navigation_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -273,8 +274,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 width: MediaQuery.sizeOf(context).width,
                 child: TextButton(
                   onPressed: () {
-                    // Add functionality for the Find button here
-                    _showRouteOnMap();
+                    Navigator.push(context, MaterialPageRoute(
+                      builder: (context) {
+                        return FindingTrip();
+                      },
+                    ));
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Colors.blue,

@@ -6,7 +6,6 @@ class CreatedSuccessfully extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var mediaQuery = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(),
       drawer: const DriverDrawer(),
@@ -59,7 +58,7 @@ class CreatedSuccessfully extends StatelessWidget {
               onPressed: () {},
               child: const Row(
                 children: [
-                  Icon(Icons.av_timer_rounded),
+                  Icon(Icons.timelapse_rounded),
                   Text(
                     "You'll be redirected after 10 sec",
                     style: TextStyle(
