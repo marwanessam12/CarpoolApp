@@ -1,10 +1,13 @@
 import 'dart:math';
 
 import 'package:carpool/core/constants.dart';
+import 'package:carpool/features/home/data/ride_model.dart';
 import 'package:carpool/features/home/presentation/screens/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/widgets/created_successfully.dart';
+import 'package:carpool/features/home/presentation/widgets/ride_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:intl/intl.dart'; // For formatting the date
@@ -17,6 +20,7 @@ class CreateTrip extends StatefulWidget {
 }
 
 class _CreateTripState extends State<CreateTrip> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _isSwitched = false;
 
   // Method to calculate distance in kilometers
@@ -108,8 +112,8 @@ class _CreateTripState extends State<CreateTrip> {
   }
 
   GoogleMapController? mapController;
-  TextEditingController _originController = TextEditingController();
-  TextEditingController _destinationController = TextEditingController();
+  TextEditingController originController = TextEditingController();
+  TextEditingController destinationController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(
       apiKey:
           "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); // Replace with your API Key
@@ -152,11 +156,11 @@ class _CreateTripState extends State<CreateTrip> {
     setState(() {
       if (isOrigin) {
         _origin = location;
-        _originController.text = prediction.description!;
+        originController.text = prediction.description!;
         _originPredictions.clear();
       } else {
         _destination = location;
-        _destinationController.text = prediction.description!;
+        destinationController.text = prediction.description!;
         _destinationPredictions.clear();
       }
       _calculatePrice();
@@ -190,18 +194,20 @@ class _CreateTripState extends State<CreateTrip> {
     setState(() {
       if (_origin == null) {
         _origin = tappedPosition;
-        _originController.text =
+        originController.text =
             "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
       } else if (_destination == null) {
         _destination = tappedPosition;
-        _destinationController.text =
+        destinationController.text =
             "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
       }
     });
   }
 
   @override
+
   Widget build(BuildContext context) {
+    final ridecontroller= Get.put(RideController());
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(
@@ -230,7 +236,9 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
-                    controller: _originController,
+
+                    controller: ridecontroller.originController,
+
                     decoration: const InputDecoration(
                       labelText: 'Starting location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -242,6 +250,10 @@ class _CreateTripState extends State<CreateTrip> {
                     ),
                     onChanged: (value) {
                       _onSearchChanged(value, true);
+                      setState(() {
+                        _formKey.currentState!
+                            .validate(); // Manually trigger validation
+                      });
                     },
                   ),
                 ),
@@ -271,7 +283,7 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(width: 35),
                 Expanded(
                   child: TextField(
-                    controller: _destinationController,
+                    controller: ridecontroller.destinationController,
                     decoration: const InputDecoration(
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       border: OutlineInputBorder(),
@@ -485,7 +497,16 @@ class _CreateTripState extends State<CreateTrip> {
             SizedBox(
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
+
                 onPressed: () {
+                  if (_formKey.currentState!.validate()) {
+                    final ride = RideModel(
+                      Starting_location: ridecontroller.originController.text.trim(),
+                      Arriving_location: ridecontroller.destinationController.text.trim(),
+
+                    );
+                    RideController.instance.createRide(ride);
+                  }
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return const CreatedSuccessfully();
