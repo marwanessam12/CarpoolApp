@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:carpool/core/constants.dart';
+import 'package:carpool/features/home/presentation/screens/driverhomescreen.dart';
+import 'package:carpool/features/home/presentation/widgets/created_successfully.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -222,41 +224,7 @@ class _CreateTripState extends State<CreateTrip> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 10),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     const Text('From', style: TextStyle(fontSize: 18.0)),
-            //     const SizedBox(width: 10),
-            //     Expanded(
-            //       child: TextFormField(
-            //         decoration: const InputDecoration(
-            //           labelText: 'Starting location',
-            //           floatingLabelBehavior: FloatingLabelBehavior.auto,
-            //           border: OutlineInputBorder(),
-            //           hintText: 'Enter departure location',
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
-            // const SizedBox(height: 10.0),
-            // Row(
-            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //   children: [
-            //     const Text('To', style: TextStyle(fontSize: 18.0)),
-            //     const SizedBox(width: 35),
-            //     Expanded(
-            //       child: TextFormField(
-            //         decoration: const InputDecoration(
-            //           labelText: 'Arriving location',
-            //           floatingLabelBehavior: FloatingLabelBehavior.auto,
-            //           border: OutlineInputBorder(),
-            //           hintText: 'Enter destination location',
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -520,7 +488,20 @@ class _CreateTripState extends State<CreateTrip> {
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
                 onPressed: () {
-                  // Handle create trip logic
+                  Navigator.push(context, MaterialPageRoute(
+                    builder: (context) {
+                      return const CreatedSuccessfully();
+                    },
+                  ));
+
+                  // After 5 seconds, navigate to DriverHomeScreen
+                  Future.delayed(const Duration(seconds: 10), () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const DriverHome()),
+                    );
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,

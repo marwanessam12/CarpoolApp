@@ -84,7 +84,7 @@ class DriverDrawer extends StatelessWidget {
                 Column(
                   children: [
                     ListTile(
-                      title: const Text('My Trips'),
+                      title: const Text('Your rides'),
                       onTap: () {},
                     ),
                     ListTile(

@@ -156,107 +156,138 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(),
       drawer: const NavDrawer(),
-      body: Column(
+      body: Stack(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _originController,
-                  decoration: const InputDecoration(
-                    labelText: 'Starting location',
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    hintText: 'Enter Pickup point',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (value) {
-                    _onSearchChanged(value, true);
-                  },
-                ),
-                if (_originPredictions.isNotEmpty)
-                  Container(
-                    height: 100,
-                    child: ListView.builder(
-                      itemCount: _originPredictions.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(_originPredictions[index].description!),
-                          onTap: () =>
-                              _onPlaceSelected(_originPredictions[index], true),
-                        );
+          Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _originController,
+                      decoration: const InputDecoration(
+                        labelText: 'Starting location',
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        hintText: 'Enter Pickup point',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        _onSearchChanged(value, true);
                       },
                     ),
-                  ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                TextField(
-                  controller: _destinationController,
-                  decoration: const InputDecoration(
-                    floatingLabelBehavior: FloatingLabelBehavior.auto,
-                    labelText: 'Where to',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (value) {
-                    _onSearchChanged(value, false);
-                  },
+                    if (_originPredictions.isNotEmpty)
+                      Container(
+                        height: 100,
+                        child: ListView.builder(
+                          itemCount: _originPredictions.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title:
+                                  Text(_originPredictions[index].description!),
+                              onTap: () => _onPlaceSelected(
+                                  _originPredictions[index], true),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
                 ),
-                if (_destinationPredictions.isNotEmpty)
-                  Container(
-                    height: 100,
-                    child: ListView.builder(
-                      itemCount: _destinationPredictions.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title:
-                              Text(_destinationPredictions[index].description!),
-                          onTap: () => _onPlaceSelected(
-                              _destinationPredictions[index], false),
-                        );
-                      },
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(
-                target: LatLng(30.0444, 31.2357), // Cairo, Egypt
-                zoom: 10,
               ),
-              onMapCreated: (GoogleMapController controller) {
-                mapController = controller;
-              },
-              onTap: _onMapTapped, // Listen for map taps
-              markers: {
-                if (_origin != null)
-                  Marker(
-                      markerId: MarkerId('origin'),
-                      position: _origin!,
-                      infoWindow:
-                          InfoWindow(title: 'Origin', snippet: 'Selected')),
-                if (_destination != null)
-                  Marker(
-                      markerId: MarkerId('destination'),
-                      position: _destination!,
-                      infoWindow: InfoWindow(
-                          title: 'Destination', snippet: 'Selected')),
-              },
-              polylines: {
-                if (_routeCoordinates.isNotEmpty)
-                  Polyline(
-                    polylineId: PolylineId('route'),
-                    points: _routeCoordinates,
-                    color: Colors.blue,
-                    width: 5,
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    TextField(
+                      controller: _destinationController,
+                      decoration: const InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.auto,
+                        labelText: 'Where to',
+                        prefixIcon: Icon(Icons.search),
+                      ),
+                      onChanged: (value) {
+                        _onSearchChanged(value, false);
+                      },
+                    ),
+                    if (_destinationPredictions.isNotEmpty)
+                      Container(
+                        height: 100,
+                        child: ListView.builder(
+                          itemCount: _destinationPredictions.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              title: Text(
+                                  _destinationPredictions[index].description!),
+                              onTap: () => _onPlaceSelected(
+                                  _destinationPredictions[index], false),
+                            );
+                          },
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(30.0444, 31.2357), // Cairo, Egypt
+                    zoom: 10,
                   ),
-              },
+                  onMapCreated: (GoogleMapController controller) {
+                    mapController = controller;
+                  },
+                  onTap: _onMapTapped, // Listen for map taps
+                  markers: {
+                    if (_origin != null)
+                      Marker(
+                          markerId: MarkerId('origin'),
+                          position: _origin!,
+                          infoWindow:
+                              InfoWindow(title: 'Origin', snippet: 'Selected')),
+                    if (_destination != null)
+                      Marker(
+                          markerId: MarkerId('destination'),
+                          position: _destination!,
+                          infoWindow: InfoWindow(
+                              title: 'Destination', snippet: 'Selected')),
+                  },
+                  polylines: {
+                    if (_routeCoordinates.isNotEmpty)
+                      Polyline(
+                        polylineId: PolylineId('route'),
+                        points: _routeCoordinates,
+                        color: Colors.blue,
+                        width: 5,
+                      ),
+                  },
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 20,
+            left: 2,
+            right: 2,
+            child: Center(
+              child: SizedBox(
+                width: MediaQuery.sizeOf(context).width,
+                child: TextButton(
+                  onPressed: () {
+                    // Add functionality for the Find button here
+                    _showRouteOnMap();
+                  },
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const Text(
+                    'Find',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ],
