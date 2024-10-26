@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/driver_model.dart';
-import 'package:carpool/features/home/presentation/screens/driverhomescreen.dart';
+import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/widgets/Driver_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';

@@ -1,5 +1,5 @@
 import 'package:carpool/core/constants.dart';
-import 'package:carpool/features/home/presentation/screens/homescreen1.dart';
+import 'package:carpool/features/home/presentation/screens/user/homescreen1.dart';
 import 'package:carpool/features/home/presentation/widgets/nav_widgets/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';

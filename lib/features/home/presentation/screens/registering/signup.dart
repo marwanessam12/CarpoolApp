@@ -1,5 +1,5 @@
 import 'package:carpool/core/constants.dart';
-import 'package:carpool/features/home/presentation/screens/otp_screen.dart';
+import 'package:carpool/features/home/presentation/screens/registering/otp_screen.dart';
 import 'package:carpool/features/home/presentation/widgets/Passfieldsignup.dart';
 import 'package:carpool/features/home/presentation/widgets/common_appbar.dart';
 import 'package:carpool/features/home/presentation/widgets/signup_controller.dart';
@@ -9,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import '../../../../repository/user repository/user_repository.dart';
-import '../../data/user_model.dart';
+import '../../../../../repository/user repository/user_repository.dart';
+import '../../../data/user_model.dart';
 import 'signin.dart';
 
 class SignUp extends StatefulWidget {

@@ -1,5 +1,5 @@
-import 'package:carpool/features/home/presentation/screens/signin.dart';
-import 'package:carpool/features/home/presentation/screens/signup.dart';
+import 'package:carpool/features/home/presentation/screens/registering/signin.dart';
+import 'package:carpool/features/home/presentation/screens/registering/signup.dart';
 import 'package:carpool/features/home/presentation/widgets/signappbar.dart';
 import 'package:flutter/material.dart';
 

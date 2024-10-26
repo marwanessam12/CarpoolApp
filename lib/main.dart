@@ -1,4 +1,4 @@
-import 'package:carpool/features/home/presentation/screens/sign_view.dart';
+import 'package:carpool/features/home/presentation/screens/registering/sign_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
