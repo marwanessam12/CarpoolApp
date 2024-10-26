@@ -8,8 +8,8 @@ class RideModel {
   final int? selectedSeats;
   final double? tipPrice;
   final double? tripDistance;
-  final String originController;
-  final String destinationController;
+  final String? originController;
+  final String? destinationController;
   final String tripType;
 
   const RideModel({

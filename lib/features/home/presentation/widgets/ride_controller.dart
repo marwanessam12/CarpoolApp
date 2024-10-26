@@ -7,8 +7,8 @@ class RideController extends GetxController {
   static RideController get instance => Get.find();
 
   //Text fields controllers
-  final originController = TextEditingController();
-  final destinationController = TextEditingController();
+  static final originController = TextEditingController();
+  static final destinationController = TextEditingController();
   final rideRepo = Get.put(RideRepository());
 
   void createRide(RideModel ride) {

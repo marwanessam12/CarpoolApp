@@ -1,3 +1,5 @@
+import 'package:carpool/core/constants.dart';
+import 'package:carpool/features/home/presentation/widgets/ride_controller.dart';
 import 'package:flutter/material.dart';
 
 class FindingTrip extends StatelessWidget {
@@ -15,18 +17,105 @@ class FindingTrip extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                width: double.infinity,
-                height: mediaQuary.height * 0.20,
+                padding: const EdgeInsets.all(16.0),
+                margin: const EdgeInsets.all(16.0),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey, // Outline color
-                    width: 2.0, // Outline width
-                  ),
-                  borderRadius:
-                      BorderRadius.circular(8.0), // Rounded corners (optional)
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.2),
+                      spreadRadius: 2,
+                      blurRadius: 5,
+                      offset: Offset(0, 3), // changes position of shadow
+                    ),
+                  ],
                 ),
-                padding: EdgeInsets.all(16.0), // Inner padding (optional)
-                child: Text("to be done"),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'From',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(selectedDepartureTime!),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Row(
+                              children: [
+                                const SizedBox(
+                                  width: 15,
+                                ),
+                                const Icon(
+                                  Icons.location_on_sharp,
+                                  color: Colors.blue,
+                                ),
+                                Text(
+                                  RideController.originController.text
+                                      .split(',')
+                                      .first,
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '\EGP ${tripPrice.toStringAsFixed(2)}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.0), // Space between rows
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'To',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(selectedTime!),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 25,
+                            ),
+                            Icon(
+                              Icons.location_on_sharp,
+                              color: Colors.blue,
+                            ),
+                            Text(
+                              RideController.destinationController.text
+                                  .split(',')
+                                  .first,
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               )
             ],
           ),

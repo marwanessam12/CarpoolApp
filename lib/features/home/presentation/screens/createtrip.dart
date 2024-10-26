@@ -33,7 +33,8 @@ class _CreateTripState extends State<CreateTrip> {
     print("Selected trip type: $tripType"); // Example usage
   }
 
-  late RideController ridecontroller; // Define as a class-level variable
+  final RideController ridecontroller =
+      Get.put(RideController()); // Define as a class-level variable
 
   // Method to calculate distance in kilometers
   double _calculateDistance(LatLng start, LatLng end) {
@@ -124,8 +125,7 @@ class _CreateTripState extends State<CreateTrip> {
   }
 
   GoogleMapController? mapController;
-  TextEditingController originController = TextEditingController();
-  TextEditingController destinationController = TextEditingController();
+
   GoogleMapsPlaces _places = GoogleMapsPlaces(
       apiKey: "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); //  your API Key
   List<Prediction> _originPredictions = [];
@@ -161,7 +161,6 @@ class _CreateTripState extends State<CreateTrip> {
   @override
   void initState() {
     super.initState();
-    ridecontroller = Get.put(RideController()); // Initialize ridecontroller
   }
 
   // Update _onPlaceSelected to use ridecontroller
@@ -174,13 +173,11 @@ class _CreateTripState extends State<CreateTrip> {
     setState(() {
       if (isOrigin) {
         _origin = location;
-        ridecontroller.originController.text =
-            prediction.description!; // Use ridecontroller here
+        RideController.originController.text = prediction.description!;
         _originPredictions.clear();
       } else {
         _destination = location;
-        ridecontroller.destinationController.text =
-            prediction.description!; // Use ridecontroller here
+        RideController.destinationController.text = prediction.description!;
         _destinationPredictions.clear();
       }
       _calculatePrice();
@@ -214,12 +211,12 @@ class _CreateTripState extends State<CreateTrip> {
     setState(() {
       if (_origin == null) {
         _origin = tappedPosition;
-        originController.text =
-            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
+        RideController.originController.text =
+            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})";
       } else if (_destination == null) {
         _destination = tappedPosition;
-        destinationController.text =
-            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
+        RideController.destinationController.text =
+            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})";
       }
     });
   }
@@ -255,7 +252,7 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
-                    controller: ridecontroller.originController,
+                    controller: RideController.originController,
                     decoration: const InputDecoration(
                       labelText: 'Starting location',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -296,7 +293,7 @@ class _CreateTripState extends State<CreateTrip> {
                 const SizedBox(width: 35),
                 Expanded(
                   child: TextField(
-                    controller: ridecontroller.destinationController,
+                    controller: RideController.destinationController,
                     decoration: const InputDecoration(
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                       border: OutlineInputBorder(),
@@ -517,9 +514,9 @@ class _CreateTripState extends State<CreateTrip> {
                     tripDistance: tripDistance,
                     tripType: tripType,
                     originController:
-                        ridecontroller.originController.text.trim(),
+                        RideController.originController.text.trim(),
                     destinationController:
-                        ridecontroller.destinationController.text.trim(),
+                        RideController.destinationController.text.trim(),
                   );
                   RideController.instance.createRide(ride);
 
@@ -530,7 +527,7 @@ class _CreateTripState extends State<CreateTrip> {
                   ));
 
                   // After 5 seconds, navigate to DriverHomeScreen
-                  Future.delayed(const Duration(seconds: 10), () {
+                  Future.delayed(const Duration(seconds: 5), () {
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(

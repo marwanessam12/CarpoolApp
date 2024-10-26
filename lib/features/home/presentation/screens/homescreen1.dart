@@ -14,8 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   GoogleMapController? mapController;
-  TextEditingController _originController = TextEditingController();
-  TextEditingController _destinationController = TextEditingController();
+  TextEditingController StartController = TextEditingController();
+  TextEditingController ArrivalController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(
       apiKey:
           "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); // Replace with your API Key
@@ -58,11 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       if (isOrigin) {
         _origin = location;
-        _originController.text = prediction.description!;
+        StartController.text = prediction.description!;
         _originPredictions.clear();
       } else {
         _destination = location;
-        _destinationController.text = prediction.description!;
+        ArrivalController.text = prediction.description!;
         _destinationPredictions.clear();
       }
     });
@@ -134,11 +134,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       if (_origin == null) {
         _origin = tappedPosition;
-        _originController.text =
+        StartController.text =
             "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
       } else if (_destination == null) {
         _destination = tappedPosition;
-        _destinationController.text =
+        ArrivalController.text =
             "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
       }
       // Clear predictions when a location is selected on the map
@@ -166,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     TextField(
-                      controller: _originController,
+                      controller: StartController,
                       decoration: const InputDecoration(
                         labelText: 'Starting location',
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -200,7 +200,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     TextField(
-                      controller: _destinationController,
+                      controller: ArrivalController,
                       decoration: const InputDecoration(
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
                         labelText: 'Where to',

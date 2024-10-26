@@ -60,9 +60,8 @@ class CreatedSuccessfully extends StatelessWidget {
                 children: [
                   Icon(Icons.timelapse_rounded),
                   Text(
-                    "You'll be redirected after 10 sec",
+                    "You'll be redirected after 5 seconds",
                     style: TextStyle(
-                      //fontWeight: FontWeight.bold,
                       fontSize: 18.0,
                     ),
                   ),

@@ -8,6 +8,7 @@ List<bool> seatSelected = [
   false,
   false
 ]; // To track the state of each seat
+
 String? selectedTime; // Variable to store the selected arrival time
 String? selectedDepartureTime; // Variable to store the selected departure time
 DateTime selectedDate = DateTime.now(); // Initialize with today's date
