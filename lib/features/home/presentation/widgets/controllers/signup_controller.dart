@@ -9,11 +9,11 @@ class SignUpController extends GetxController {
   //Text fields controllers
   final firstname = TextEditingController();
   final lastname = TextEditingController();
-  final email = TextEditingController();
-  final password = TextEditingController();
+  static final email = TextEditingController();
+  static final password = TextEditingController();
   final mobileNumber = TextEditingController();
   final age = TextEditingController();
-  final id = TextEditingController();
+  static final id = TextEditingController();
   final gender = TextEditingController();
 
   final userRepo = Get.put(UserRepository());

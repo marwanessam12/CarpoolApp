@@ -1,12 +1,10 @@
+import 'package:carpool/features/home/presentation/widgets/controllers/signup_controller.dart';
 import 'package:flutter/material.dart';
 
 class PasswordForm extends StatefulWidget {
-  final TextEditingController passwordFieldController;
   final GlobalKey<FormState> formKey;
 
-  PasswordForm(
-      {Key? key, required this.passwordFieldController, required this.formKey})
-      : super(key: key);
+  PasswordForm({Key? key, required this.formKey}) : super(key: key);
 
   @override
   _PasswordFormState createState() => _PasswordFormState();
@@ -25,7 +23,7 @@ class _PasswordFormState extends State<PasswordForm> {
       children: [
         // Password Field
         TextFormField(
-          controller: widget.passwordFieldController,
+          controller: SignUpController.password,
           onChanged: (value) {
             setState(() {
               widget.formKey.currentState!.validate(); // Validate on change
@@ -85,7 +83,7 @@ class _PasswordFormState extends State<PasswordForm> {
           validator: (value) {
             if (value == null || value.isEmpty) {
               return 'Please confirm your password';
-            } else if (value != widget.passwordFieldController.text) {
+            } else if (value != SignUpController.password.text) {
               return 'Passwords do not match';
             }
             return null;

@@ -4,7 +4,7 @@ import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/ride_model.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/widgets/created_successfully.dart';
-import 'package:carpool/features/home/presentation/widgets/ride_controller.dart';
+import 'package:carpool/features/home/presentation/widgets/controllers/ride_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

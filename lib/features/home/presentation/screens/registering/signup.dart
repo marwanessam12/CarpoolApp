@@ -2,7 +2,7 @@ import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/presentation/screens/registering/otp_screen.dart';
 import 'package:carpool/features/home/presentation/widgets/Passfieldsignup.dart';
 import 'package:carpool/features/home/presentation/widgets/common_appbar.dart';
-import 'package:carpool/features/home/presentation/widgets/signup_controller.dart';
+import 'package:carpool/features/home/presentation/widgets/controllers/signup_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +22,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final userRepo = Get.put(UserRepository());
-  void createUser(UserModel user) {
-    userRepo.createUser((user));
-  }
 
-  bool isEmailUnique = true; // Variable to track uniqueness
+  bool isEmailUnique = true; // Variable to track email uniqueness
 
   final _formKey = GlobalKey<FormState>();
 
@@ -42,11 +39,10 @@ class _SignUpState extends State<SignUp> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Form(
-                  key: _formKey, // Wrap entire form
+                  key: _formKey,
                   child: Column(
                     children: <Widget>[
                       const CommonAppbar(),
-
                       const Text(
                         "Register",
                         style: TextStyle(
@@ -56,22 +52,14 @@ class _SignUpState extends State<SignUp> {
                         ),
                       ),
                       const Text("Create your account"),
-                      const SizedBox(
-                        height: 25.0,
-                      ), //register
+                      const SizedBox(height: 25.0),
 
+                      // First and last name fields
                       Row(
                         children: [
                           Expanded(
                             child: TextFormField(
                               controller: controller.firstname,
-                              onChanged: (value) {
-                                setState(() {
-                                  userName = value;
-                                  _formKey.currentState!
-                                      .validate(); // Manually trigger validation
-                                });
-                              },
                               decoration: const InputDecoration(
                                 labelText: 'First Name',
                                 floatingLabelBehavior:
@@ -79,6 +67,13 @@ class _SignUpState extends State<SignUp> {
                                 border: OutlineInputBorder(),
                                 hintText: 'First Name',
                               ),
+                              onChanged: (value) {
+                                setState(() {
+                                  userName = value;
+                                  _formKey.currentState!
+                                      .validate(); // Manually trigger validation
+                                });
+                              },
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'First Name is required';
@@ -86,19 +81,11 @@ class _SignUpState extends State<SignUp> {
                                 return null;
                               },
                             ),
-                          ), //first name
-                          const SizedBox(
-                            width: 10.0,
                           ),
+                          const SizedBox(width: 10.0),
                           Expanded(
                             child: TextFormField(
                               controller: controller.lastname,
-                              onChanged: (value) {
-                                setState(() {
-                                  _formKey.currentState!
-                                      .validate(); // Manually trigger validation
-                                });
-                              },
                               decoration: const InputDecoration(
                                 labelText: 'Last Name',
                                 floatingLabelBehavior:
@@ -106,6 +93,12 @@ class _SignUpState extends State<SignUp> {
                                 border: OutlineInputBorder(),
                                 hintText: 'Last Name',
                               ),
+                              onChanged: (value) {
+                                setState(() {
+                                  _formKey.currentState!
+                                      .validate(); // Manually trigger validation
+                                });
+                              },
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return 'Last Name is required';
@@ -113,16 +106,14 @@ class _SignUpState extends State<SignUp> {
                                 return null;
                               },
                             ),
-                          ), //last name
+                          ),
                         ],
-                      ), //name
-                      const SizedBox(
-                        height: 15.0,
                       ),
+                      const SizedBox(height: 15.0),
 
                       TextFormField(
                         keyboardType: TextInputType.number,
-                        controller: controller.id,
+                        controller: SignUpController.id,
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly
                         ], // Restrict to numbers only
@@ -201,6 +192,10 @@ class _SignUpState extends State<SignUp> {
                               onChanged: (String? newValue) {
                                 // Update the controller with the selected value
                                 controller.gender.text = newValue ?? '';
+                                setState(() {
+                                  _formKey.currentState!
+                                      .validate(); // Manually trigger validation
+                                });
                               },
                               decoration: const InputDecoration(
                                 labelText: 'Gender',
@@ -253,40 +248,30 @@ class _SignUpState extends State<SignUp> {
                       const SizedBox(
                         height: 15.0,
                       ),
+
+                      // Email field with unique check
                       TextFormField(
-                        controller: controller.email,
-                        onChanged: (value) async {
-                          setState(() {
-                            userEmail = value;
-                          });
-
-                          // Firestore check for email uniqueness
-                          final querySnapshot = await FirebaseFirestore.instance
-                              .collection(
-                                  'users') // Replace with your collection name
-                              .where('email', isEqualTo: value)
-                              .get();
-
-                          if (querySnapshot.docs.isNotEmpty) {
-                            // If the email already exists, mark it as non-unique
-                            setState(() {
-                              isEmailUnique = false;
-                            });
-                          } else {
-                            setState(() {
-                              isEmailUnique = true;
-                            });
-                          }
-
-                          // Manually trigger form validation
-                          _formKey.currentState!.validate();
-                        },
+                        controller: SignUpController.email,
                         decoration: const InputDecoration(
                           labelText: 'Email',
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
                           border: OutlineInputBorder(),
                           hintText: 'Enter your email@nu.edu.eg',
                         ),
+                        onChanged: (value) async {
+                          // Check Firestore for email uniqueness
+                          final querySnapshot = await FirebaseFirestore.instance
+                              .collection('users')
+                              .where('email', isEqualTo: value)
+                              .get();
+
+                          setState(() {
+                            isEmailUnique = querySnapshot.docs.isEmpty;
+                          });
+                          userEmail = value;
+                          _formKey.currentState!
+                              .validate(); // Trigger validation
+                        },
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Email is required';
@@ -300,42 +285,38 @@ class _SignUpState extends State<SignUp> {
                         },
                       ),
 
-                      const SizedBox(
-                        height: 15.0,
-                      ),
-
+                      // Other fields (age, gender, password, etc.)
+                      const SizedBox(height: 15.0),
                       PasswordForm(
-                        passwordFieldController: controller.password,
                         formKey: _formKey,
                       ),
 
-                      const SizedBox(
-                        height: 25.0,
-                      ),
+                      const SizedBox(height: 25.0),
 
+                      // Register button
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width,
                         child: TextButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              // Form is valid, proceed
                               FirebaseAuth.instance
                                   .createUserWithEmailAndPassword(
-                                email: controller.email.text,
-                                password: controller.password.text,
+                                email: SignUpController.email.text,
+                                password: SignUpController.password.text,
                               )
                                   .then((value) async {
-                                // Once the user is created, store their info in Firestore
                                 final user = UserModel(
                                   firstname: controller.firstname.text.trim(),
                                   lastname: controller.lastname.text.trim(),
                                   age: int.parse(controller.age.text.trim()),
                                   gender: controller.gender.text.trim(),
-                                  id: int.parse(controller.id.text.trim()),
-                                  email: controller.email.text.trim(),
+                                  id: int.parse(
+                                      SignUpController.id.text.trim()),
+                                  email: SignUpController.email.text.trim(),
                                   mobileNumber:
                                       controller.mobileNumber.text.trim(),
-                                  password: controller.password.text.trim(),
+                                  password:
+                                      SignUpController.password.text.trim(),
                                 );
 
                                 SignUpController.instance.createUser(user);
@@ -344,7 +325,7 @@ class _SignUpState extends State<SignUp> {
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
                                   return OtpScreen(
-                                      email: controller.email.text);
+                                      email: SignUpController.email.text);
                                 },
                               ));
                             }
@@ -361,18 +342,15 @@ class _SignUpState extends State<SignUp> {
                             ),
                           ),
                         ),
-                      ), //register button
-                      const SizedBox(
-                        height: 25.0,
                       ),
+
+                      const SizedBox(height: 25.0),
 
                       Row(
                         children: [
                           const Text(
                             "I already have account, ",
-                            style: TextStyle(
-                              fontSize: 15.0,
-                            ),
+                            style: TextStyle(fontSize: 15.0),
                           ),
                           InkWell(
                             onTap: () {
@@ -383,7 +361,6 @@ class _SignUpState extends State<SignUp> {
                               );
                             },
                             child: const Text(
-                              textAlign: TextAlign.center,
                               "Log In",
                               style: TextStyle(
                                 decoration: TextDecoration.underline,

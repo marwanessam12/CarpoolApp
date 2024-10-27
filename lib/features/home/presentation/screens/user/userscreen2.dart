@@ -1,5 +1,5 @@
 import 'package:carpool/core/constants.dart';
-import 'package:carpool/features/home/presentation/widgets/ride_controller.dart';
+import 'package:carpool/features/home/presentation/widgets/controllers/ride_controller.dart';
 import 'package:flutter/material.dart';
 
 class FindingTrip extends StatelessWidget {
@@ -7,8 +7,6 @@ class FindingTrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var mediaQuary = MediaQuery.of(context).size;
-
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
@@ -17,8 +15,8 @@ class FindingTrip extends StatelessWidget {
           child: Column(
             children: [
               Container(
-                padding: const EdgeInsets.all(16.0),
-                margin: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(10.0),
+                margin: const EdgeInsets.all(10.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8.0),
@@ -27,7 +25,7 @@ class FindingTrip extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.2),
                       spreadRadius: 2,
                       blurRadius: 5,
-                      offset: Offset(0, 3), // changes position of shadow
+                      offset: const Offset(0, 3), // changes position of shadow
                     ),
                   ],
                 ),
@@ -40,41 +38,33 @@ class FindingTrip extends StatelessWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'From',
                               style: TextStyle(fontWeight: FontWeight.bold),
                             ),
                             Text(selectedDepartureTime!),
                           ],
                         ),
-                        Column(
-                          children: [
-                            Row(
-                              children: [
-                                const SizedBox(
-                                  width: 15,
-                                ),
-                                const Icon(
-                                  Icons.location_on_sharp,
-                                  color: Colors.blue,
-                                ),
-                                Text(
-                                  RideController.originController.text
-                                      .split(',')
-                                      .first,
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ],
-                            ),
-                          ],
+                        const SizedBox(width: 15),
+                        const Icon(
+                          Icons.location_on_sharp,
+                          color: Colors.blue,
                         ),
-                        const Spacer(),
+                        Expanded(
+                          child: Text(
+                            RideController.originController.text,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Text(
-                              '\EGP ${tripPrice.toStringAsFixed(2)}',
-                              style: TextStyle(
+                              'EGP ${tripPrice.toStringAsFixed(2)}',
+                              style: const TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.blue),
                             ),
@@ -82,36 +72,40 @@ class FindingTrip extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16.0), // Space between rows
-                    Row(
+                    const SizedBox(height: 16.0), // Space between rows
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'To',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            Text(selectedTime!),
-                          ],
-                        ),
                         Row(
                           children: [
-                            SizedBox(
-                              width: 25,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'To',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                                Text(selectedTime!),
+                              ],
                             ),
-                            Icon(
+                            const SizedBox(width: 22),
+                            const Icon(
                               Icons.location_on_sharp,
                               color: Colors.blue,
                             ),
-                            Text(
-                              RideController.destinationController.text
-                                  .split(',')
-                                  .first,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                            Expanded(
+                              child: Text(
+                                RideController.destinationController.text,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
                             ),
                           ],
                         ),
+                        //add driver details for //text"user name ,icon avatar, seats"
                       ],
                     ),
                   ],

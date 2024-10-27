@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/driver_model.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
-import 'package:carpool/features/home/presentation/widgets/Driver_controller.dart';
+import 'package:carpool/features/home/presentation/widgets/controllers/Driver_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -68,23 +68,11 @@ class _DriverScreenState extends State<DriverScreen> {
             await _uploadImageToStorage(_CarLicense!, 'car_license_image');
 
         // Save the URLs to Firestore
-        await FirebaseFirestore.instance.collection('users').add({
+        await FirebaseFirestore.instance.collection('Drivers').add({
           'driverLicenseUrl': imageUrl1,
           'carLicenseUrl': imageUrl2,
         });
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Images uploaded successfully!')),
-        );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to upload images: $e')),
-        );
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select both images')),
-      );
+      } catch (e) {}
     }
   }
 
