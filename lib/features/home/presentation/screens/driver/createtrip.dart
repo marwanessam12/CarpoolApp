@@ -24,9 +24,11 @@ class _CreateTripState extends State<CreateTrip> {
   static String tripType = "lazy trip"; // Default trip type
 
   void _clearFields() {
-    RideController.originController.clear(); // Clear origin field
-    RideController.destinationController.clear(); // Clear destination field
+    RideController.originController.clear(); // Clear departure location field
+    RideController.destinationController
+        .clear(); // Clear destination location field
     setState(() {
+      selectedTime = arrivalTimeOptions[0]; // Reset selected arrival time
       selectedDepartureTime = null; // Reset selected departure time
       selectedDate = DateTime.now(); // Reset selected date to today
       selectedSeats = 0; // Reset selected seats
@@ -37,7 +39,6 @@ class _CreateTripState extends State<CreateTrip> {
       _origin = null; // Reset origin location
       _destination = null; // Reset destination location
       seatSelected = [false, false, false]; // Reset seat selection
-      arrivalTimeOptions.clear(); // Clear any custom arrival times
     });
   }
 
@@ -525,6 +526,7 @@ class _CreateTripState extends State<CreateTrip> {
               child: ElevatedButton(
                 onPressed: () {
                   final ride = RideModel(
+                    id: userId,
                     selectedDepartureTime: selectedDepartureTime,
                     selectedTime: selectedTime,
                     selectedDate: selectedDate,

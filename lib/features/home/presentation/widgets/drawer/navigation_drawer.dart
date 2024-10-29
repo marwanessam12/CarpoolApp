@@ -8,23 +8,37 @@ import 'package:flutter/material.dart';
 class NavDrawer extends StatelessWidget {
   const NavDrawer({super.key});
 
+  Future<Map<String, dynamic>?> _fetchUserData() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    try {
+      final userDoc = await firestore.collection('users').doc(userId).get();
+      if (userDoc.exists) {
+        return userDoc.data();
+      } else {
+        print("User not found in the 'users' collection");
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching user data: $e");
+      return null;
+    }
+  }
+
   Future<void> _checkDriverMode(BuildContext context) async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
     try {
-      // Now check if this userId exists in the driver collection
       final userDriver =
           await firestore.collection('Drivers').doc(userId).get();
 
       if (userDriver.exists) {
-        // Navigate to DriverHomeScreen if the document exists in driver collection
         Navigator.push(context, MaterialPageRoute(
           builder: (context) {
             return const DriverHome();
           },
         ));
       } else {
-        // Handle case where no user with userid is found
         print('No driver found with id: $userId');
         Navigator.push(context, MaterialPageRoute(
           builder: (context) {
@@ -33,7 +47,6 @@ class NavDrawer extends StatelessWidget {
         ));
       }
     } catch (e) {
-      // Handle errors here (e.g., show an error message)
       print('Error checking driver mode: $e');
     }
   }
@@ -43,16 +56,51 @@ class NavDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(
-              color: Colors.grey,
-            ),
-            accountName: Text(userName ?? ''),
-            accountEmail: Text(userEmail ?? ''),
-            currentAccountPicture: const CircleAvatar(
-              backgroundImage: NetworkImage(
-                  'https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png'),
-            ),
+          FutureBuilder<Map<String, dynamic>?>(
+            future: _fetchUserData(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const UserAccountsDrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                  ),
+                  accountName: Text('Loading...'),
+                  accountEmail: Text('Loading...'),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png'),
+                  ),
+                );
+              } else if (snapshot.hasData) {
+                final userData = snapshot.data;
+                return UserAccountsDrawerHeader(
+                  decoration: const BoxDecoration(
+                    color: Colors.grey,
+                  ),
+                  accountName: Text(
+                    userData?['first name'] ?? '',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  accountEmail: Text(userData?['email'] ?? ''),
+                  currentAccountPicture: const CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png'),
+                  ),
+                );
+              } else {
+                return const UserAccountsDrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                  ),
+                  accountName: Text('No data'),
+                  accountEmail: Text('No data'),
+                  currentAccountPicture: CircleAvatar(
+                    backgroundImage: NetworkImage(
+                        'https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png'),
+                  ),
+                );
+              }
+            },
           ),
           Expanded(
             child: Column(

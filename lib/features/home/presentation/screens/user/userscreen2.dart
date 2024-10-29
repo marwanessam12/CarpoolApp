@@ -14,6 +14,7 @@ class TripListScreen extends StatelessWidget {
 
   RideModel _fromFirestore(DocumentSnapshot doc) {
     return RideModel(
+      id: "Driver Id",
       selectedTime: doc['Arrival Time'],
       selectedDepartureTime: doc['Departure Time'],
       selectedDate: doc['Date'] != null
