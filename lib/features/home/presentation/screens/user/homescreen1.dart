@@ -276,7 +276,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(
                       builder: (context) {
-                        return FindingTrip();
+                        return TripListScreen(
+                            startLocation: StartController.text,
+                            arrivalLocation: ArrivalController.text);
                       },
                     ));
                   },

@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/ride_model.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
-import 'package:carpool/features/home/presentation/widgets/created_successfully.dart';
 import 'package:carpool/features/home/presentation/widgets/controllers/ride_controller.dart';
+import 'package:carpool/features/home/presentation/widgets/created_successfully.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,8 +20,26 @@ class CreateTrip extends StatefulWidget {
 }
 
 class _CreateTripState extends State<CreateTrip> {
-  bool isSwitched = false;
-  String tripType = "lazy trip"; // Default trip type
+  static bool isSwitched = false;
+  static String tripType = "lazy trip"; // Default trip type
+
+  void _clearFields() {
+    RideController.originController.clear(); // Clear origin field
+    RideController.destinationController.clear(); // Clear destination field
+    setState(() {
+      selectedDepartureTime = null; // Reset selected departure time
+      selectedDate = DateTime.now(); // Reset selected date to today
+      selectedSeats = 0; // Reset selected seats
+      tripDistance = 0; // Reset trip distance
+      tripPrice = 0; // Reset trip price
+      isSwitched = false; // Reset trip type switch
+      tripType = "lazy trip"; // Reset trip type to default
+      _origin = null; // Reset origin location
+      _destination = null; // Reset destination location
+      seatSelected = [false, false, false]; // Reset seat selection
+      arrivalTimeOptions.clear(); // Clear any custom arrival times
+    });
+  }
 
   void _updateTripType(bool value) {
     setState(() {
@@ -55,7 +73,7 @@ class _CreateTripState extends State<CreateTrip> {
     return degrees * pi / 180;
   }
 
-  // Method to calculate price based on distance
+// Method to calculate price based on distance
   void _calculatePrice() {
     if (_origin != null && _destination != null) {
       double distance = _calculateDistance(_origin!, _destination!);
@@ -180,7 +198,8 @@ class _CreateTripState extends State<CreateTrip> {
         RideController.destinationController.text = prediction.description!;
         _destinationPredictions.clear();
       }
-      _calculatePrice();
+      // Call the price calculation after updating the location
+      _calculatePrice(); // Ensure to call this to update distance and price
     });
   }
 
@@ -434,7 +453,7 @@ class _CreateTripState extends State<CreateTrip> {
                       child: GestureDetector(
                         onTap: () => _toggleSeat(index),
                         child: Icon(
-                          Icons.chair,
+                          Icons.airline_seat_recline_normal,
                           color:
                               seatSelected[index] ? Colors.blue : Colors.grey,
                           size: 30,
@@ -519,7 +538,9 @@ class _CreateTripState extends State<CreateTrip> {
                         RideController.destinationController.text.trim(),
                   );
                   RideController.instance.createRide(ride);
-
+                  // Clear fields after saving
+                  _clearFields();
+                  //push to next screen
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) {
                       return const CreatedSuccessfully();

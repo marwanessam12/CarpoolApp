@@ -25,8 +25,13 @@ class RideModel {
   });
   Map<String, dynamic> toJson() {
     return {
-      "Arrival Time": selectedTime,
-      "Departure Time": selectedDepartureTime,
+      "Arrival Time": selectedTime != null
+          ? DateFormat.jm().format(DateFormat("HH:mm").parse(selectedTime!))
+          : null,
+      "Departure Time": selectedDepartureTime != null
+          ? DateFormat.jm()
+              .format(DateFormat("HH:mm").parse(selectedDepartureTime!))
+          : null,
       "Date": selectedDate != null
           ? DateFormat('dd-MM-yyyy').format(selectedDate!)
           : null,

@@ -14,15 +14,15 @@ String? selectedDepartureTime; // Variable to store the selected departure time
 DateTime selectedDate = DateTime.now(); // Initialize with today's date
 List<String> arrivalTimeOptions = [
   '--', // Placeholder option
-  '8.15',
-  '9.15',
-  '10.15',
-  '11.15',
-  '12.15',
-  '13.15',
-  '14.15',
-  '15.15',
-  '16.15',
+  '08:15 AM',
+  '09:15 AM',
+  '10:15 AM',
+  '11:15 AM',
+  '12:15 PM',
+  '13:15 PM',
+  '14:15 PM',
+  '15:15 PM',
+  '16:15 PM',
   'Customize Arrival Time', // Add custom option
 ];
 double tripPrice = 0.0; // Initialize trip price with 0.0 EGP
