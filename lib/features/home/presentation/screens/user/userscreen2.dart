@@ -1,4 +1,3 @@
-import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/ride_model.dart';
 import 'package:carpool/features/home/presentation/widgets/ridedetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -84,7 +83,7 @@ class TripListScreen extends StatelessWidget {
                       MaterialPageRoute(
                         builder: (context) => RideDetailsScreen(
                           rideId: doc.id,
-                          driverId: userId, // Pass the driver ID
+                          driverId: ride.driverId, // Pass the driver ID
                         ),
                       ),
                     );

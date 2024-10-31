@@ -1,4 +1,3 @@
-import 'package:carpool/core/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +30,7 @@ class RideDetailsScreen extends StatelessWidget {
             return FutureBuilder<DocumentSnapshot>(
               future: FirebaseFirestore.instance
                   .collection('users')
-                  .doc(userId)
+                  .doc(driverId)
                   .get(),
               builder: (context, userSnapshot) {
                 if (userSnapshot.connectionState == ConnectionState.waiting) {
