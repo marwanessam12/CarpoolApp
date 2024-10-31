@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 //trip updated successfully to db
 class RideModel {
-  final String? id;
+  final String? driverId;
   final String? selectedTime;
   final String? selectedDepartureTime;
   final DateTime? selectedDate;
@@ -14,7 +14,7 @@ class RideModel {
   final String tripType;
 
   const RideModel({
-    required this.id,
+    required this.driverId,
     required this.selectedTime,
     required this.selectedDepartureTime,
     required this.selectedDate,
@@ -27,7 +27,7 @@ class RideModel {
   });
   Map<String, dynamic> toJson() {
     return {
-      'Driver id': id,
+      'Driver id': driverId,
       "Arrival Time": selectedTime != null
           ? DateFormat.jm().format(DateFormat("HH:mm").parse(selectedTime!))
           : null,
@@ -36,7 +36,7 @@ class RideModel {
               .format(DateFormat("HH:mm").parse(selectedDepartureTime!))
           : null,
       "Date": selectedDate != null
-          ? DateFormat('dd-MM-yyyy').format(selectedDate!)
+          ? DateFormat('dd.MM.yyyy').format(selectedDate!)
           : null,
       "Seats": selectedSeats,
       "Price(EGP)": double.parse(tipPrice!.toStringAsFixed(2)),

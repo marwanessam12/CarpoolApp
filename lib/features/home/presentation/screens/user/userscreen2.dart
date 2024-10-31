@@ -1,4 +1,6 @@
+import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/ride_model.dart';
+import 'package:carpool/features/home/presentation/widgets/ridedetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,11 +16,11 @@ class TripListScreen extends StatelessWidget {
 
   RideModel _fromFirestore(DocumentSnapshot doc) {
     return RideModel(
-      id: "Driver Id",
+      driverId: doc['Driver id'],
       selectedTime: doc['Arrival Time'],
       selectedDepartureTime: doc['Departure Time'],
       selectedDate: doc['Date'] != null
-          ? DateFormat('dd-MM-yyyy').parse(doc['Date'])
+          ? DateFormat('dd.MM.yyyy').parse(doc['Date'])
           : null,
       selectedSeats: doc['Seats'],
       tipPrice: (doc['Price(EGP)'] as num).toDouble(),
@@ -70,89 +72,93 @@ class TripListScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              RideModel ride = _fromFirestore(snapshot.data!.docs[index]);
+              DocumentSnapshot doc = snapshot.data!.docs[index];
+              RideModel ride = _fromFirestore(doc);
+
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  padding: const EdgeInsets.all(16.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.grey, blurRadius: 4, spreadRadius: 2)
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // First Row
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // const Text('From',
-                              //     style:
-                              //         TextStyle(fontWeight: FontWeight.bold)),
-                              Text(ride.selectedDepartureTime ?? ''),
-                            ],
-                          ),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.location_on_sharp,
-                              color: Colors.blue),
-                          Expanded(
-                            child: Text(
-                              ride.originController ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RideDetailsScreen(
+                          rideId: doc.id,
+                          driverId: userId, // Pass the driver ID
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(16.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.grey, blurRadius: 4, spreadRadius: 2)
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(ride.selectedDepartureTime ?? ''),
+                              ],
                             ),
-                          ),
-                          Column(
-                            children: [
-                              Text(
-                                  ' ${ride.tipPrice?.toStringAsFixed(2) ?? ''} EGP',
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue)),
-                            ],
-                          ),
-                        ],
-                      ),
-
-                      // Seats Row
-
-                      const SizedBox(height: 5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: _buildSeatIcons(ride.selectedSeats ?? 0),
-                      ),
-                      // Second Row
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // const Text('To',
-                              //     style:
-                              //         TextStyle(fontWeight: FontWeight.bold)),
-                              Text(ride.selectedTime ?? ''),
-                            ],
-                          ),
-                          const SizedBox(width: 10),
-                          const Icon(Icons.location_on_sharp,
-                              color: Colors.blue),
-                          Expanded(
-                            child: Text(
-                              ride.destinationController ?? '',
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
+                            const SizedBox(width: 10),
+                            const Icon(Icons.location_on_sharp,
+                                color: Colors.blue),
+                            Expanded(
+                              child: Text(
+                                ride.originController ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                            Column(
+                              children: [
+                                Text(
+                                    ' ${ride.tipPrice?.toStringAsFixed(2) ?? ''} EGP',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue)),
+                              ],
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: _buildSeatIcons(ride.selectedSeats ?? 0),
+                        ),
+                        Row(
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(ride.selectedTime ?? ''),
+                              ],
+                            ),
+                            const SizedBox(width: 10),
+                            const Icon(Icons.location_on_sharp,
+                                color: Colors.blue),
+                            Expanded(
+                              child: Text(
+                                ride.destinationController ?? '',
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );

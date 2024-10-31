@@ -526,7 +526,7 @@ class _CreateTripState extends State<CreateTrip> {
               child: ElevatedButton(
                 onPressed: () {
                   final ride = RideModel(
-                    id: userId,
+                    driverId: userId,
                     selectedDepartureTime: selectedDepartureTime,
                     selectedTime: selectedTime,
                     selectedDate: selectedDate,
