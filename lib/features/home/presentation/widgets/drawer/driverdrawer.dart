@@ -131,7 +131,7 @@ class DriverDrawer extends StatelessWidget {
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (context) {
-                            return HistoryScreen(
+                            return DriverHistoryScreen(
                               driverId: userId,
                             );
                           },

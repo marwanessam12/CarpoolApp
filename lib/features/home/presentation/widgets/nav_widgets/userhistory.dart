@@ -1,26 +1,28 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class DriverHistoryScreen extends StatelessWidget {
-  final String? driverId; // Assuming you pass driverID to this screen
+class UserHistoryScreen extends StatelessWidget {
+  final String? passengerId;
 
-  DriverHistoryScreen({required this.driverId});
+  UserHistoryScreen({required this.passengerId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('History')),
+      appBar: AppBar(title: const Text('My Trips')),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('Ride')
-            .where('Driver id', isEqualTo: driverId)
-            .snapshots(),
+        stream: FirebaseFirestore.instance.collection('Ride').snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final trips = snapshot.data!.docs;
+          // Filter trips where `passengerId` is in the `passengers` field
+          final trips = snapshot.data!.docs.where((trip) {
+            var passengers = trip.data()?['passengers'] as String? ?? '';
+            return passengers.split('/ ').contains(passengerId);
+          }).toList();
 
           return ListView.builder(
             itemCount: trips.length,
@@ -28,9 +30,20 @@ class DriverHistoryScreen extends StatelessWidget {
               var trip = trips[index];
               var date = trip['Date'];
               var departureTime = trip['Departure Time'];
+              var arrivalTime = trip['Arrival Time'];
               var startingLocation = trip['Starting location'];
               var arrivingLocation = trip['Arriving location'];
               var price = trip['Price(EGP)'];
+
+              // Define date and time format
+              DateFormat format = DateFormat('dd.MM.yyyy h:mm a');
+
+              // Clean up any non-standard spaces or hidden characters
+              String cleanedDate =
+                  '$date $arrivalTime'.replaceAll(RegExp(r'\s+'), ' ');
+              DateTime arrivalDateTime = format.parse(cleanedDate);
+
+              bool isCompleted = DateTime.now().isAfter(arrivalDateTime);
 
               return Container(
                 margin:
@@ -53,14 +66,31 @@ class DriverHistoryScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('$date, $departureTime',
-                            style: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        Text('$price EGP',
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.blue)),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text('$date, $departureTime',
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            Text('$price EGP',
+                                style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)),
+                            Text(
+                              isCompleted ? 'Completed' : 'Upcoming',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      isCompleted ? Colors.grey : Colors.green),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                     const SizedBox(height: 10),
@@ -95,6 +125,7 @@ class DriverHistoryScreen extends StatelessWidget {
                         ),
                       ],
                     ),
+                    const SizedBox(height: 10),
                   ],
                 ),
               );

@@ -2,6 +2,7 @@ import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverscreen1.dart';
 import 'package:carpool/features/home/presentation/widgets/nav_widgets/settings.dart';
+import 'package:carpool/features/home/presentation/widgets/nav_widgets/userhistory.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -111,7 +112,15 @@ class NavDrawer extends StatelessWidget {
                   children: [
                     ListTile(
                       title: const Text('My Trips'),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(
+                          builder: (context) {
+                            return UserHistoryScreen(
+                              passengerId: userId,
+                            );
+                          },
+                        ));
+                      },
                     ),
                     ListTile(
                       title: const Text('Payment'),

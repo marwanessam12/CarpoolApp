@@ -1,3 +1,5 @@
+import 'package:carpool/core/constants.dart';
+import 'package:carpool/features/home/presentation/screens/user/homescreen1.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -10,7 +12,7 @@ class RideDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Ride Details")),
+        appBar: AppBar(title: const Text("Your Rides")),
         body: FutureBuilder<DocumentSnapshot>(
           future:
               FirebaseFirestore.instance.collection('Ride').doc(rideId).get(),
@@ -252,16 +254,100 @@ class RideDetailsScreen extends StatelessWidget {
                               SizedBox(
                                 width: MediaQuery.sizeOf(context).width,
                                 child: ElevatedButton(
-                                  onPressed: () {
-                                    // Handle booking logic
+                                  onPressed: () async {
+                                    try {
+                                      // Fetch the current ride document
+                                      DocumentSnapshot rideDoc =
+                                          await FirebaseFirestore.instance
+                                              .collection('Ride')
+                                              .doc(rideId)
+                                              .get();
+
+                                      final rideData = rideDoc.data()
+                                          as Map<String, dynamic>;
+                                      final currentSeats =
+                                          rideData['Seats'] ?? 0;
+
+                                      // Check if seats are available
+                                      if (currentSeats > 0) {
+                                        Map<String, dynamic> updatedFields = {};
+
+                                        // Retrieve existing passengers and add the current user
+                                        String passengers =
+                                            rideData['passengers'] ??
+                                                ''; // Existing passenger IDs
+                                        if (passengers.isNotEmpty) {
+                                          passengers +=
+                                              '/ $userId'; // Append new userId with a slash
+                                        } else {
+                                          passengers =
+                                              userId!; // Initialize if no passengers yet
+                                        }
+
+                                        updatedFields['passengers'] =
+                                            passengers; // Store all passenger IDs
+                                        updatedFields['Seats'] = currentSeats -
+                                            1; // Decrease available seats
+
+                                        await FirebaseFirestore.instance
+                                            .collection('Ride')
+                                            .doc(rideId)
+                                            .update(updatedFields);
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          const SnackBar(
+                                              content: Text(
+                                                  "Ride booked successfully!")),
+                                        );
+                                        Future.delayed(
+                                            const Duration(seconds: 4), () {
+                                          Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomeScreen()),
+                                            (Route<dynamic> route) => false,
+                                          );
+                                        });
+                                      } else {
+                                        // Show error dialog if no seats are available
+                                        showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  "No Seats Available"),
+                                              content: const Text(
+                                                  "There are no available seats for this ride."),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                          .pop(),
+                                                  child: const Text("OK"),
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    } catch (e) {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content:
+                                                Text("Error booking ride: $e")),
+                                      );
+                                    }
                                   },
-                                  child: const Text(
-                                    "Book Ride",
-                                    style: TextStyle(fontSize: 18),
-                                  ),
                                   style: TextButton.styleFrom(
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,
+                                  ),
+                                  child: const Text(
+                                    "Book Ride",
+                                    style: TextStyle(fontSize: 18),
                                   ),
                                 ),
                               ),
