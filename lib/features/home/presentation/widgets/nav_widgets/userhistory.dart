@@ -1,3 +1,4 @@
+import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -10,7 +11,7 @@ class UserHistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('My Trips')),
+      appBar: MyAppBar(title: 'My Trips'),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('Ride').snapshots(),
         builder: (context, snapshot) {
@@ -23,6 +24,15 @@ class UserHistoryScreen extends StatelessWidget {
             var passengers = trip.data()?['passengers'] as String? ?? '';
             return passengers.split('/ ').contains(passengerId);
           }).toList();
+
+          if (trips.isEmpty) {
+            return const Center(
+              child: Text(
+                'No previous trips ',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+            );
+          }
 
           return ListView.builder(
             itemCount: trips.length,

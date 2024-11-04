@@ -14,7 +14,10 @@ class CommonAppbar extends StatelessWidget {
           onTap: () {
             Navigator.pop(context);
           },
-          child: const Icon(Icons.arrow_back),
+          child: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.blue,
+          ),
         ),
         InkWell(
           onTap: () {},

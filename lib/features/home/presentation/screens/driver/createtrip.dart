@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/ride_model.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
+import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:carpool/features/home/presentation/widgets/controllers/ride_controller.dart';
 import 'package:carpool/features/home/presentation/widgets/created_successfully.dart';
 import 'package:flutter/cupertino.dart';
@@ -245,7 +246,7 @@ class _CreateTripState extends State<CreateTrip> {
   Widget build(BuildContext context) {
     final ridecontroller = Get.put(RideController());
     return Scaffold(
-      appBar: AppBar(),
+      appBar: MyAppBar(),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(bottom: 8.0, left: 8.0, right: 8.0),
         child: Column(

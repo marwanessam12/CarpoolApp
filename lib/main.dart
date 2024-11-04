@@ -17,6 +17,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: Colors.blue, // Sets the selection color to blue
+          selectionHandleColor:
+              Colors.blue, // Sets the selection handle color to blue
+        ),
         fontFamily: 'Poppins',
       ),
       home: const SignningView(),

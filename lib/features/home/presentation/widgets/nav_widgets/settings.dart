@@ -1,4 +1,5 @@
 import 'package:carpool/features/home/presentation/screens/registering/sign_view.dart';
+import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,7 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        appBar: MyAppBar(),
         body: SingleChildScrollView(
           child: Stack(
             children: [

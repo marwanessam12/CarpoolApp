@@ -1,6 +1,6 @@
 import 'package:carpool/features/home/presentation/screens/registering/signin.dart';
 import 'package:carpool/features/home/presentation/screens/registering/signup.dart';
-import 'package:carpool/features/home/presentation/widgets/signappbar.dart';
+import 'package:carpool/features/home/presentation/widgets/app_bars/signappbar.dart';
 import 'package:flutter/material.dart';
 
 class SignningView extends StatelessWidget {
@@ -18,36 +18,42 @@ class SignningView extends StatelessWidget {
               padding: const EdgeInsets.only(
                   bottom: 8.0, left: 8.0, right: 8.0, top: 10.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SignAppbar(),
-                  const Row(
+                  Column(
                     children: [
-                      Text(
-                        "Welcome to,\n ",
-                        textAlign: TextAlign.left,
+                      const SignAppbar(),
+                      const Row(
+                        children: [
+                          Text(
+                            "Welcome to,\n ",
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 35.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Image.asset(
+                        "assets/icons/logo.png",
+                        width: 300,
+                        height: 300,
+                      ),
+                      const SizedBox(height: 50),
+                      const Text(
+                        textAlign: TextAlign.center,
+                        "Your ride, Your Choice",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 35.0,
+                          fontSize: 25.0,
                         ),
                       ),
                     ],
                   ),
-                  Image.asset(
-                    "assets/icons/logo.png",
-                    width: 300,
-                    height: 300,
-                  ),
-                  const SizedBox(height: 50),
-                  const Text(
-                    textAlign: TextAlign.center,
-                    "Your ride, Your Choice",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25.0,
-                    ),
-                  ),
                   Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
                         width: MediaQuery.sizeOf(context).width,
@@ -102,7 +108,7 @@ class SignningView extends StatelessWidget {
                         ),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ))

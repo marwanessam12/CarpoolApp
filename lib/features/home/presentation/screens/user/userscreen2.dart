@@ -1,4 +1,5 @@
 import 'package:carpool/features/home/data/ride_model.dart';
+import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:carpool/features/home/presentation/widgets/ridedetails.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -47,9 +48,7 @@ class TripListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Trips'),
-      ),
+      appBar: MyAppBar(title: 'Trips'),
       body: StreamBuilder<QuerySnapshot>(
         stream: ridesCollection
             .where('Starting location', isEqualTo: startLocation)

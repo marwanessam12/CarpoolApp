@@ -1,5 +1,6 @@
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/presentation/screens/user/homescreen1.dart';
+import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class RideDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: const Text("Your Rides")),
+        appBar: MyAppBar(title: "Your Rides"),
         body: FutureBuilder<DocumentSnapshot>(
           future:
               FirebaseFirestore.instance.collection('Ride').doc(rideId).get(),

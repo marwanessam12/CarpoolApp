@@ -1,7 +1,7 @@
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/presentation/screens/registering/otp_screen.dart';
 import 'package:carpool/features/home/presentation/widgets/Passfieldsignup.dart';
-import 'package:carpool/features/home/presentation/widgets/common_appbar.dart';
+import 'package:carpool/features/home/presentation/widgets/app_bars/common_appbar.dart';
 import 'package:carpool/features/home/presentation/widgets/controllers/signup_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

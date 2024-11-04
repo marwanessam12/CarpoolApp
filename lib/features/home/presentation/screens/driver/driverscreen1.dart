@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/data/driver_model.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
+import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:carpool/features/home/presentation/widgets/controllers/Driver_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -81,30 +82,22 @@ class _DriverScreenState extends State<DriverScreen> {
     final drivercontroller = Get.put(DriverController());
 
     return Scaffold(
+      appBar: MyAppBar(),
       body: SingleChildScrollView(
         child: Stack(
           children: [
             SafeArea(
                 child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(bottom: 8.0, left: 8, right: 8),
               child: Form(
                 key: _formKey,
                 child: Column(children: <Widget>[
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.arrow_back_rounded,
-                            color: Colors.black),
-                        onPressed: () => Navigator.of(context).pop(),
-                      ), //arrow back
-                    ],
-                  ),
                   const Text(
                     "Register as driver",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.blue,
-                      fontSize: 20.0,
+                      fontSize: 25.0,
                     ),
                   ),
                   const SizedBox(

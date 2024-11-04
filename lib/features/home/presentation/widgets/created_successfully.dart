@@ -1,3 +1,4 @@
+import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:carpool/features/home/presentation/widgets/drawer/driverdrawer.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ class CreatedSuccessfully extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: MyAppBar(),
       drawer: const DriverDrawer(),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

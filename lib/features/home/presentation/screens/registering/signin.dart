@@ -1,12 +1,11 @@
 import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/presentation/screens/user/homescreen1.dart';
 import 'package:carpool/features/home/presentation/widgets/controllers/signup_controller.dart';
-import 'package:carpool/features/home/presentation/widgets/pasfieldsignin.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/common_appbar.dart';
+import '../../widgets/app_bars/common_appbar.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -19,9 +18,25 @@ class _SignInState extends State<SignIn> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
+  final TextEditingController emailController = SignUpController.email;
+  final TextEditingController passwordController = SignUpController.password;
+
+  String? emailError;
+  String? passwordError;
+
   Future<void> _signIn() async {
-    String email = SignUpController.email.text.trim();
-    String password = SignUpController.password.text.trim();
+    setState(() {
+      emailError =
+          emailController.text.trim().isEmpty ? "This field is required" : null;
+      passwordError = passwordController.text.trim().isEmpty
+          ? "This field is required"
+          : null;
+    });
+
+    if (emailError != null || passwordError != null) return;
+
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
 
     try {
       final userQuery = await _firestore
@@ -31,7 +46,6 @@ class _SignInState extends State<SignIn> {
           .get();
 
       if (userQuery.docs.isNotEmpty) {
-        // Get the user ID and store it in userId
         userId = userQuery.docs.first.id;
         print('User ID: $userId');
         Navigator.pushReplacement(
@@ -87,17 +101,43 @@ class _SignInState extends State<SignIn> {
                     ),
                     const SizedBox(height: 10.0),
                     TextField(
-                      controller: SignUpController.email,
-                      onChanged: (value) => userEmail = value,
-                      decoration: const InputDecoration(
+                      controller: emailController,
+                      onChanged: (value) => setState(() {
+                        emailError = null;
+                      }),
+                      decoration: InputDecoration(
                         labelText: 'Email',
+                        errorText: emailError,
                         floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        border: OutlineInputBorder(),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color:
+                                emailError != null ? Colors.red : Colors.grey,
+                          ),
+                        ),
                         hintText: 'Enter your email@nu.edu.eg',
                       ),
                     ),
                     const SizedBox(height: 10.0),
-                    PasswordField(),
+                    TextField(
+                      controller: passwordController,
+                      onChanged: (value) => setState(() {
+                        passwordError = null;
+                      }),
+                      obscureText: true,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        errorText: passwordError,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: passwordError != null
+                                ? Colors.red
+                                : Colors.grey,
+                          ),
+                        ),
+                        hintText: 'Enter your password',
+                      ),
+                    ),
                     const Row(
                       children: [
                         Text(
