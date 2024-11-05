@@ -1,6 +1,6 @@
 String userEmail = '';
 String userName = '';
-String? userId;
+String userId = '';
 
 int selectedSeats = 0; // To keep track of selected seats
 List<bool> seatSelected = [

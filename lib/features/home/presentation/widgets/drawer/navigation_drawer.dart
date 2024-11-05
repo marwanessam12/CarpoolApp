@@ -132,7 +132,15 @@ class NavDrawer extends StatelessWidget {
                     ),
                     ListTile(
                       title: const Text('Messages'),
-                      onTap: () {},
+                      onTap: () {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => ChatScreen(
+                        //         user1Id: userId, driver1Id: driverId),
+                        //   ),
+                        // );
+                      },
                     ),
                     ListTile(
                       title: const Text('Safety Center'),
