@@ -23,6 +23,7 @@ class _SignInState extends State<SignIn> {
 
   String? emailError;
   String? passwordError;
+  bool _isPasswordVisible = false; // Variable to manage password visibility
 
   Future<void> _signIn() async {
     setState(() {
@@ -124,7 +125,7 @@ class _SignInState extends State<SignIn> {
                       onChanged: (value) => setState(() {
                         passwordError = null;
                       }),
-                      obscureText: true,
+                      obscureText: !_isPasswordVisible, // Manage visibility
                       decoration: InputDecoration(
                         labelText: 'Password',
                         errorText: passwordError,
@@ -136,6 +137,20 @@ class _SignInState extends State<SignIn> {
                           ),
                         ),
                         hintText: 'Enter your password',
+                        suffixIcon: IconButton(
+                          // IconButton for visibility toggle
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _isPasswordVisible =
+                                  !_isPasswordVisible; // Toggle the state
+                            });
+                          },
+                        ),
                       ),
                     ),
                     const Row(

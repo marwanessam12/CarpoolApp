@@ -1,4 +1,6 @@
+import 'package:carpool/core/constants.dart';
 import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
+import 'package:carpool/features/home/presentation/widgets/chat/ChatScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -154,8 +156,15 @@ class DriverHistory2Screen extends StatelessWidget {
                               Row(
                                 children: [
                                   CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        userData?['profileIconUrl'] ?? ''),
+                                    backgroundImage: userData?[
+                                                    'profileIconUrl'] !=
+                                                null &&
+                                            userData!['profileIconUrl']
+                                                .isNotEmpty
+                                        ? NetworkImage(
+                                            userData!['profileIconUrl'])
+                                        : NetworkImage(
+                                            'https://icons.veryicon.com/png/o/miscellaneous/standard/avatar-15.png'), // A fallback URL online
                                     radius: 24,
                                   ),
                                   const SizedBox(width: 10),
@@ -257,7 +266,19 @@ class DriverHistory2Screen extends StatelessWidget {
                                     backgroundColor: Colors.blue,
                                     foregroundColor: Colors.white,
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ChatScreen(
+                                          rideId: rideId,
+                                          driverId: driverId,
+                                          userId:
+                                              userId, // Replace with the current user ID
+                                        ),
+                                      ),
+                                    );
+                                  },
                                   child: const Text(
                                     "Chat with user Here",
                                     style: TextStyle(fontSize: 18),
