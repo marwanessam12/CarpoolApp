@@ -79,19 +79,40 @@ class _ChatScreenState extends State<ChatScreen> {
                           ? Alignment.centerRight
                           : Alignment.centerLeft,
                       child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: MediaQuery.of(context).size.width *
+                              0.68, // 68% of the screen width
+                        ),
                         padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 12),
+                            vertical: 10,
+                            horizontal:
+                                14), // Compact padding for WhatsApp style
                         margin: const EdgeInsets.symmetric(
-                            vertical: 4, horizontal: 8),
+                            vertical: 2,
+                            horizontal: 6), // Smaller margin for compact view
                         decoration: BoxDecoration(
-                          color: isUserMessage ? Colors.blue : Colors.grey[300],
-                          borderRadius: BorderRadius.circular(8),
+                          color: isUserMessage
+                              ? Colors.blue
+                              : Colors.grey[
+                                  300], // WhatsApp green for user and gray for driver
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(18),
+                            topRight: Radius.circular(18),
+                            bottomLeft: isUserMessage
+                                ? Radius.circular(18)
+                                : Radius.zero,
+                            bottomRight: isUserMessage
+                                ? Radius.zero
+                                : Radius.circular(18),
+                          ),
                         ),
                         child: Text(
                           message.text,
                           style: TextStyle(
-                              color:
-                                  isUserMessage ? Colors.white : Colors.black),
+                            color:
+                                isUserMessage ? Colors.white : Colors.black87,
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     );
