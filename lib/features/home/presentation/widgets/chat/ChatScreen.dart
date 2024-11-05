@@ -21,6 +21,13 @@ class ChatScreen extends StatefulWidget {
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
 
+  final List<String> _messageSuggestions = [
+    "Hello",
+    "On my way",
+    "Waiting for you",
+    "Arrived"
+  ];
+
   Future<void> _sendMessage() async {
     if (_messageController.text.isNotEmpty) {
       await sendMessage(widget.userId, widget.driverId, widget.rideId,
@@ -93,6 +100,32 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
+          // Message suggestions in a scrollable row
+          Container(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            height: 60, // Set a fixed height for the suggestion area
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: _messageSuggestions.map((suggestion) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white, // Background color
+                        foregroundColor: Colors.blue, // Text color
+                      ),
+                      onPressed: () {
+                        _messageController.text =
+                            suggestion; // Insert suggestion into text field
+                      },
+                      child: Text(suggestion),
+                    ),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
           // Padding for the input field
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -103,12 +136,16 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: _messageController,
                     decoration: const InputDecoration(
                       hintText: 'Type a message',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
                     ),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send),
+                  icon: const Icon(
+                    Icons.send,
+                    color: Colors.blue,
+                  ),
                   onPressed: _sendMessage,
                 ),
               ],
@@ -124,7 +161,7 @@ class _ChatScreenState extends State<ChatScreen> {
     final chatMessage = {
       'senderId': userId,
       'text': message,
-      'timestamp': FieldValue.serverTimestamp(),
+      'timestamp': FieldValue.serverTimestamp(), // Ensure this is called
     };
 
     await FirebaseFirestore.instance

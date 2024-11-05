@@ -378,35 +378,33 @@ class _CreateTripState extends State<CreateTrip> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Arrival Time', style: TextStyle(fontSize: 18.0)),
-                const SizedBox(width: 45.0),
+                const SizedBox(width: 20.0),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    child: Center(
-                      child: DropdownButton<String>(
-                        value: selectedTime,
-                        items: arrivalTimeOptions.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            if (value == 'Customize Arrival Time') {
-                              _selectCustomArrivalTime(context);
-                            } else {
-                              selectedTime = value == '--' ? null : value;
-                            }
-                          });
-                        },
-                        hint: const Text(
-                          'Select time',
-                          style: TextStyle(fontSize: 18.0),
-                        ),
+                    child: DropdownButton<String>(
+                      value: selectedTime,
+                      items: arrivalTimeOptions.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          if (value == 'Customize Arrival Time') {
+                            _selectCustomArrivalTime(context);
+                          } else {
+                            selectedTime = value == '--' ? null : value;
+                          }
+                        });
+                      },
+                      hint: const Text(
+                        'Select time',
+                        style: TextStyle(fontSize: 18.0),
                       ),
                     ),
                   ),

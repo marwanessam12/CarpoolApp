@@ -3,19 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Message {
   final String senderId;
   final String text;
-  final DateTime timestamp;
+  final DateTime? timestamp; // Make timestamp nullable
 
   Message({
     required this.senderId,
     required this.text,
-    required this.timestamp,
+    this.timestamp, // Optional parameter
   });
 
   Map<String, dynamic> toMap() {
     return {
       'senderId': senderId,
       'text': text,
-      'timestamp': timestamp,
+      'timestamp': timestamp != null ? Timestamp.fromDate(timestamp!) : null,
     };
   }
 
@@ -23,7 +23,9 @@ class Message {
     return Message(
       senderId: map['senderId'],
       text: map['text'],
-      timestamp: (map['timestamp'] as Timestamp).toDate(),
+      timestamp: map['timestamp'] != null
+          ? (map['timestamp'] as Timestamp).toDate()
+          : null,
     );
   }
 }

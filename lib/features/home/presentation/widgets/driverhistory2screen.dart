@@ -280,7 +280,7 @@ class DriverHistory2Screen extends StatelessWidget {
                                     );
                                   },
                                   child: const Text(
-                                    "Chat with user Here",
+                                    "Chat with User Here",
                                     style: TextStyle(fontSize: 18),
                                   ),
                                 ),
