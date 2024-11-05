@@ -1,5 +1,4 @@
 import 'package:carpool/features/home/presentation/screens/driver/createtrip.dart';
-import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:carpool/features/home/presentation/widgets/drawer/driverdrawer.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +8,7 @@ class DriverHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(),
+        appBar: AppBar(),
         drawer: const DriverDrawer(),
         body: SingleChildScrollView(
           child: Column(

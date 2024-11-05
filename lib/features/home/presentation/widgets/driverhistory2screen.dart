@@ -2,11 +2,11 @@ import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class History2Screen extends StatelessWidget {
+class DriverHistory2Screen extends StatelessWidget {
   final String rideId; // Pass the ride ID to fetch the specific ride
   final String driverId; // Pass the driver ID to fetch the specific driver
 
-  History2Screen({required this.rideId, required this.driverId});
+  DriverHistory2Screen({required this.rideId, required this.driverId});
 
   @override
   Widget build(BuildContext context) {
@@ -259,7 +259,7 @@ class History2Screen extends StatelessWidget {
                                   ),
                                   onPressed: () {},
                                   child: const Text(
-                                    "Chat with Driver Here",
+                                    "Chat with user Here",
                                     style: TextStyle(fontSize: 18),
                                   ),
                                 ),
