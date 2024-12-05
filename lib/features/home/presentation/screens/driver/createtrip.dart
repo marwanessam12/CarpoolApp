@@ -147,7 +147,7 @@ class _CreateTripState extends State<CreateTrip> {
   GoogleMapController? mapController;
 
   GoogleMapsPlaces _places = GoogleMapsPlaces(
-      apiKey: "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); //  your API Key
+      apiKey: "AIzaSyBX_G74cl-xQm-LROaXYrvTiVP4XkzTBgk"); //  your API Key
   List<Prediction> _originPredictions = [];
   List<Prediction> _destinationPredictions = [];
   LatLng? _origin;

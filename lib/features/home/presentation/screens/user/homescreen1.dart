@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController ArrivalController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(
       apiKey:
-          "AIzaSyDSGQI3H998QCVc63a8SdV0cFikSJJ3AbE"); // Replace with your API Key
+          "AIzaSyBX_G74cl-xQm-LROaXYrvTiVP4XkzTBgk"); // Replace with your API Key
   List<Prediction> _originPredictions = [];
   List<Prediction> _destinationPredictions = [];
   LatLng? _origin;
