@@ -1,5 +1,4 @@
 class DriverModel {
-  final String license;
   final String car_color;
   final String car_model;
   final int car_year;
@@ -8,10 +7,8 @@ class DriverModel {
   final String car_letters;
   final int car_numbers;
 
-
   const DriverModel({
     required this.car_type,
-    required this.license,
     required this.car_color,
     required this.car_model,
     required this.car_year,
@@ -25,7 +22,6 @@ class DriverModel {
       "car model": car_model,
       "car color": car_color,
       "car year": car_year,
-      "license": license,
       "national id": nationalID,
       "car plate numbers": car_numbers,
       "car plate letters": car_letters,

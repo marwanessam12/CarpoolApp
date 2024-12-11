@@ -5,7 +5,6 @@ import 'package:carpool/features/home/data/driver_model.dart';
 import 'package:carpool/features/home/presentation/screens/driver/driverhomescreen.dart';
 import 'package:carpool/features/home/presentation/widgets/app_bars/app_bar.dart';
 import 'package:carpool/features/home/presentation/widgets/controllers/Driver_controller.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,9 +19,6 @@ class DriverScreen extends StatefulWidget {
 
 class _DriverScreenState extends State<DriverScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  // String imageUrl = '';
-  // bool driverImageUploaded = false; // Track if the image is uploaded
-  // bool carImageUploaded = false; // Track if the image is uploaded
   //
   File? _DriverLicense;
   File? _CarLicense;
@@ -62,17 +58,11 @@ class _DriverScreenState extends State<DriverScreen> {
       try {
         // Upload driver license image with custom name
         String imageUrl1 = await _uploadImageToStorage(
-            _DriverLicense!, 'driver_license_image');
+            _DriverLicense!, 'driver license image');
 
         // Upload car license image with custom name
         String imageUrl2 =
-            await _uploadImageToStorage(_CarLicense!, 'car_license_image');
-
-        // Save the URLs to Firestore
-        await FirebaseFirestore.instance.collection('Drivers').add({
-          'driverLicenseUrl': imageUrl1,
-          'carLicenseUrl': imageUrl2,
-        });
+            await _uploadImageToStorage(_CarLicense!, 'car license image');
       } catch (e) {}
     }
   }
@@ -403,7 +393,6 @@ class _DriverScreenState extends State<DriverScreen> {
                                   drivercontroller.car_numbers.text.trim()),
                               nationalID: int.parse(
                                   drivercontroller.nationalID.text.trim()),
-                              license: drivercontroller.license.text.trim(),
                             );
 
                             DriverController.instance.createUser(driver);

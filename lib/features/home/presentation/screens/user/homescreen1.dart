@@ -14,8 +14,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   GoogleMapController? mapController;
-  TextEditingController StartController = TextEditingController();
-  TextEditingController ArrivalController = TextEditingController();
+  TextEditingController startController = TextEditingController();
+  TextEditingController arrivalController = TextEditingController();
   GoogleMapsPlaces _places = GoogleMapsPlaces(
       apiKey:
           "AIzaSyBX_G74cl-xQm-LROaXYrvTiVP4XkzTBgk"); // Replace with your API Key
@@ -58,11 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       if (isOrigin) {
         _origin = location;
-        StartController.text = prediction.description!;
+        startController.text = prediction.description!;
         _originPredictions.clear();
       } else {
         _destination = location;
-        ArrivalController.text = prediction.description!;
+        arrivalController.text = prediction.description!;
         _destinationPredictions.clear();
       }
     });
@@ -75,7 +75,21 @@ class _HomeScreenState extends State<HomeScreen> {
       _getRouteCoordinates(); // Get the route when both points are set
       mapController?.animateCamera(
         CameraUpdate.newLatLngBounds(
-          LatLngBounds(southwest: _origin!, northeast: _destination!),
+          LatLngBounds(
+              southwest: LatLng(
+                  _origin!.latitude < _destination!.latitude
+                      ? _origin!.latitude
+                      : _destination!.latitude,
+                  _origin!.longitude < _destination!.longitude
+                      ? _origin!.longitude
+                      : _destination!.longitude),
+              northeast: LatLng(
+                  _origin!.latitude > _destination!.latitude
+                      ? _origin!.latitude
+                      : _destination!.latitude,
+                  _origin!.longitude > _destination!.longitude
+                      ? _origin!.longitude
+                      : _destination!.longitude)),
           100,
         ),
       );
@@ -85,7 +99,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _getRouteCoordinates() async {
     if (_origin != null && _destination != null) {
       String url =
-          'https://maps.googleapis.com/maps/api/directions/json?origin=${_origin!.latitude},${_origin!.longitude}&destination=${_destination!.latitude},${_destination!.longitude}&key=YOUR_GOOGLE_API_KEY'; // Replace with your API Key
+          'https://maps.googleapis.com/maps/api/directions/json?origin=${_origin!.latitude},${_origin!.longitude}&destination=${_destination!.latitude},${_destination!.longitude}&departure_time=now&traffic_model=best_guess&key=AIzaSyBX_G74cl-xQm-LROaXYrvTiVP4XkzTBgk'; // Replace with your API Key
 
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -111,45 +125,31 @@ class _HomeScreenState extends State<HomeScreen> {
     List<LatLng> polyline = [];
     var numPoints = poly.length;
     var index = 0;
+    int lat = 0, lng = 0;
+
     while (index < numPoints) {
-      var lat = 0;
-      var lng = 0;
+      int shift = 0, result = 0;
       int b;
       do {
         b = poly.codeUnitAt(index++) - 63;
-        lat |= (b & 0x1f) << 5;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
       } while (b >= 0x20);
-      lat = ((lat & 1) != 0 ? ~(lat >> 1) : (lat >> 1));
+      lat += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+
+      shift = 0;
+      result = 0;
       do {
         b = poly.codeUnitAt(index++) - 63;
-        lng |= (b & 0x1f) << 5;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
       } while (b >= 0x20);
-      lng = ((lng & 1) != 0 ? ~(lng >> 1) : (lng >> 1));
-      polyline.add(LatLng((lat / 1E5), (lng / 1E5)));
+      lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
+
+      polyline.add(LatLng(lat / 1E5, lng / 1E5));
     }
+
     return polyline;
-  }
-
-  void _onMapTapped(LatLng tappedPosition) {
-    setState(() {
-      if (_origin == null) {
-        _origin = tappedPosition;
-        StartController.text =
-            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
-      } else if (_destination == null) {
-        _destination = tappedPosition;
-        ArrivalController.text =
-            "Selected Location: (${tappedPosition.latitude}, ${tappedPosition.longitude})"; // Optional description
-      }
-      // Clear predictions when a location is selected on the map
-      _originPredictions.clear();
-      _destinationPredictions.clear();
-    });
-
-    // Call to show the route if both origin and destination are selected
-    if (_origin != null && _destination != null) {
-      _showRouteOnMap();
-    }
   }
 
   @override
@@ -166,10 +166,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     TextField(
-                      controller: StartController,
+                      controller: startController,
                       decoration: const InputDecoration(
                         labelText: 'Starting location',
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
                         hintText: 'Enter Pickup point',
                         prefixIcon: Icon(Icons.search),
                       ),
@@ -178,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     if (_originPredictions.isNotEmpty)
-                      Container(
+                      SizedBox(
                         height: 100,
                         child: ListView.builder(
                           itemCount: _originPredictions.length,
@@ -200,10 +199,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     TextField(
-                      controller: ArrivalController,
+                      controller: arrivalController,
                       decoration: const InputDecoration(
-                        floatingLabelBehavior: FloatingLabelBehavior.auto,
-                        labelText: 'Where to',
+                        labelText: 'Destination',
                         prefixIcon: Icon(Icons.search),
                       ),
                       onChanged: (value) {
@@ -211,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                     if (_destinationPredictions.isNotEmpty)
-                      Container(
+                      SizedBox(
                         height: 100,
                         child: ListView.builder(
                           itemCount: _destinationPredictions.length,
@@ -237,20 +235,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   onMapCreated: (GoogleMapController controller) {
                     mapController = controller;
                   },
-                  onTap: _onMapTapped, // Listen for map taps
                   markers: {
                     if (_origin != null)
                       Marker(
-                          markerId: MarkerId('origin'),
-                          position: _origin!,
-                          infoWindow:
-                              InfoWindow(title: 'Origin', snippet: 'Selected')),
+                        markerId: MarkerId('origin'),
+                        position: _origin!,
+                      ),
                     if (_destination != null)
                       Marker(
-                          markerId: MarkerId('destination'),
-                          position: _destination!,
-                          infoWindow: InfoWindow(
-                              title: 'Destination', snippet: 'Selected')),
+                        markerId: MarkerId('destination'),
+                        position: _destination!,
+                      ),
                   },
                   polylines: {
                     if (_routeCoordinates.isNotEmpty)
@@ -267,33 +262,25 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Positioned(
             bottom: 20,
-            left: 2,
-            right: 2,
-            child: Center(
-              child: SizedBox(
-                width: MediaQuery.sizeOf(context).width,
-                child: TextButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(
-                      builder: (context) {
-                        return TripListScreen(
-                            startLocation: StartController.text,
-                            arrivalLocation: ArrivalController.text);
-                      },
-                    ));
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const Text(
-                    'Find',
-                    style: TextStyle(
-                      fontSize: 18.0,
+            left: 10,
+            right: 10,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TripListScreen(
+                      startLocation: startController.text,
+                      arrivalLocation: arrivalController.text,
                     ),
                   ),
-                ),
+                );
+              },
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.blue,
+                foregroundColor: Colors.white,
               ),
+              child: Text('Find'),
             ),
           ),
         ],
